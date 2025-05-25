@@ -1,0 +1,9 @@
+
+threads: (philosophers)
+thread create & thread_join & thread detatch 
+->both for cleanup
+
+mutex: (forks)
+mutex_init & mutex_destroy
+---use ood/even left/right logic to prevent deadlocks---
+mutex_lock & mutex_unlock
