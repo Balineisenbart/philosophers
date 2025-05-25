@@ -36,7 +36,7 @@ static const char *ft_atol(const char *s)
     s = valid_input(*s);
 
     while (is_digit(*s))
-        nb = (nb * nb) + (*s++ - '0');
+        nb = (nb * 10) + (*s++ - '0');
     if (nb > INT_MAX)
         ft_error("Input bigger than INT_MAX\n");
     return (nb);
@@ -45,10 +45,13 @@ static const char *ft_atol(const char *s)
 void parse_symposium(t_symposium *init, int argc, char **argv)
 {
     init->n_philo = ft_atol(argv[1]);
-    init->time_to_die = ft_atol(argv[2]);
-    init->time_to_eat = ft_atol(argv[3]);
-    init->time_to_sleep = ft_atol(argv[4]);
-    if (argc == 6)
+    init->time_to_die = ft_atol(argv[2]); //need msec but, usleep gets µsec
+    init->time_to_eat = ft_atol(argv[3]); //need msec but, usleep gets µsec
+    init->time_to_sleep = ft_atol(argv[4]); //need msec but, usleep gets µsec
+    if (init->time_to_sleep < 6e4 || init->time_to_eat < 6e4 || init->time_to_die < 6e4)
+        ft_error("Not enough time. Must be over 60ms\n");
+    if (argv[5])
         init->n_need_to_eat = ft_atol(argv[5]);
-    else init->n_need_to_eat = NULL;
+    else
+        init->n_need_to_eat = -1;
 }

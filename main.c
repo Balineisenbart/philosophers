@@ -10,7 +10,7 @@ int main(int argc, char **argv)
     if (argc < 5 || argc > 6)
         ft_error("Use: number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
     parse_symposium(&symposium, argc, **argv);
-    init_symposium(&symposium);
+    init_symposium(&symposium); //init:  long long   start_simulation; bool end_simulation; t_fork *forks; t_philo *philos;
     start_symposium(&symposium);
     clean_symposium(&symposium); //->when all philos full or philo dead
     return 0;
