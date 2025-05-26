@@ -47,5 +47,7 @@ typedef struct s_symposium{
     t_fork *fork;
 } t_symposium;
 
+void error_exit(const char *error_message);
+void parse_input(t_symposium *symposium, int argc, char **argv);
 
 #endif

@@ -1,57 +1,67 @@
 
-
 #include "philo.h"
 
-static bool is_digit(const char *str)
+
+//check for only positive
+//not > INT_MAX number od digits = 9 & when converted cmp to INT_MAX
+//only digits
+
+static bool is_space(char c)
 {
-    return (*str >= '0' && *str <= '9');
+    return ((c >= 9 && c <= 13) || c == 32);
 }
-static const char *valid_input(const char *s)
+
+static bool is_digit(char c)
 {
-    const char *nbr;
-    long long len;
+    return ((c >= '0' && c <= '9'));
+}
+
+static const char *valid_input(const char *str)
+{
+    const char *number;
+    int len;
 
     len = 0;
-    while(*s == ' ' || (*s >= 9 && *s <= 13))
-        s++;
-    if (*s == '+')
-        s++;
-    else if (*s == '-')
-        ft_error("No negative Input!\n");
-    if (!is_digit(*s))
-        ft_error("Input not a number\n");
-    nbr = s;
-    while (is_digit(*s++))
+    while (is_space(*str))
+        str++;
+    if (*str == '+')
+        str++;
+    else if (*str == '-')
+        error_exit("Only positive input is valid\n");
+    if (!is_digit(*str))
+        error_exit("Only valid numbers are accepted\n");
+    number = str;
+    while (is_digit(*str))
+    {
+        str++;
         len++;
+    }
     if (len > 10)
-        ft_error("Input bigger than INT_MAX\n");
-    return (nbr);
+        error_exit("Input longer than INT_MAX\n");
+    return (number);
 }
 
-static const char *ft_atol(const char *s) 
+static long long ft_atol(const char *str)
 {
     long long nb;
 
     nb = 0;
-    s = valid_input(*s);
-
-    while (is_digit(*s))
-        nb = (nb * 10) + (*s++ - '0');
+    str = valid_input(str);
+    while (is_digit(*str))
+        nb = (nb * 10) + (*str++ - '0');
     if (nb > INT_MAX)
-        ft_error("Input bigger than INT_MAX\n");
+        error_exit("Input larger than INT_MAX\n");
     return (nb);
 }
 
-void parse_symposium(t_symposium *init, int argc, char **argv)
+void parse_input(t_symposium *symposium, int argc, char **argv)
 {
-    init->n_philo = ft_atol(argv[1]);
-    init->time_to_die = ft_atol(argv[2]); //need msec but, usleep gets µsec
-    init->time_to_eat = ft_atol(argv[3]); //need msec but, usleep gets µsec
-    init->time_to_sleep = ft_atol(argv[4]); //need msec but, usleep gets µsec
-    if (init->time_to_sleep < 6e4 || init->time_to_eat < 6e4 || init->time_to_die < 6e4)
-        ft_error("Not enough time. Must be over 60ms\n");
-    if (argv[5])
-        init->n_need_to_eat = ft_atol(argv[5]);
+    symposium->n_philo = ft_atol(argv[1]);
+    symposium->time_to_die = ft_atol(argv[2]) * 1000;
+    symposium->time_to_eat = ft_atol(argv[3]) * 1000;
+    symposium->time_to_sleep = ft_atol(argv[4]) * 1000;
+    if (argc == 6)
+        symposium->n_meals = ft_atol(argv[5]);
     else
-        init->n_need_to_eat = -1;
+        symposium->n_meals = -1;
 }
