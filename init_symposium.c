@@ -18,7 +18,7 @@ static void init_forks(t_symposium *symposium)
     {
         symposium->fork[i].fork_id = i + 1;
         if (pthread_mutex_init(&symposium->fork[i].fork, NULL))
-            error_exit("Mutex init fialed. Dig for error code for more info\n"); //possibly need to free stuff
+            error_exit("Mutex init fialed. Dig for error code for more info\n"); //possibly need to free stuff; mutex_destroy.. other structs??
         i++;
     }
 }
@@ -67,15 +67,22 @@ void init_symposium(t_symposium *symposium)
     */
 
     struct timeval tv;
+    long long i;
 
+    i = 0;
     gettimeofday(&tv, NULL);
-    symposium->start_symposium = (tv.tv_sec * 1000) + (tv.tv_usec * 1000);
+    symposium->start_symposium = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
     symposium->finish_symposium = false;
 
-    //-----philos-----//
     init_forks(symposium);
     init_philos(symposium);
-    //possibly pthread_join() of all threads in a loop???
+    while (i < symposium->n_philo)
+    {
+        if (pthread_join(&symposium->philo[i], NULL))
+            error_exit("pthread_join fialed. Dig for error code for more info\n"); //possibly need to free stuff; mutex_destroy.. other structs??
+        i++;
+    }
+
 
    
 
