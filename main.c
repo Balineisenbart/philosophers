@@ -9,7 +9,7 @@ int main(int argc, char **argv)
         error_exit("Number of Input invalid\n");
     parse_input(&symposium, argc, argv);
     init_symposium(&symposium);
-    //start
+    start_symposium(&symposium);
     //clean!!
 
     return (0);

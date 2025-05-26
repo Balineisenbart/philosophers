@@ -27,7 +27,8 @@ typedef struct s_philo{
     long long   last_meal_time; //he dead?
     t_fork      *right_fork;
     t_fork      *left_fork;
-    pthread_t   thread_id; //needed to make philos threads
+    pthread_t   thread_id;
+    pthread_t   monitor_id;
     t_symposium *symposium;
 
 } t_philo;
@@ -45,9 +46,20 @@ typedef struct s_symposium{
     //general handling
     t_philo *philo;
     t_fork *fork;
+    //print locking
+    pthread_mutex_t print_lock;
+
 } t_symposium;
 
+//utils
 void error_exit(const char *error_message);
+long long get_timestamp(void);
+void print_status(const char *message, t_philo *philo);
+
+//mains
 void parse_input(t_symposium *symposium, int argc, char **argv);
+void init_symposium(t_symposium *symposium);
+
+
 
 #endif

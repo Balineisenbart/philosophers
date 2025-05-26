@@ -56,6 +56,7 @@ static long long ft_atol(const char *str)
 
 void parse_input(t_symposium *symposium, int argc, char **argv)
 {
+    //there was some kind of threshold of 60ms ... input can not be smaller than 60ms??
     symposium->n_philo = ft_atol(argv[1]);
     symposium->time_to_die = ft_atol(argv[2]) * 1000;
     symposium->time_to_eat = ft_atol(argv[3]) * 1000;
