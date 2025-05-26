@@ -2,7 +2,28 @@
 #include "philo.h"
 
 
-static void init_philo(t_symposium *symposium)
+static void init_forks(t_symposium *symposium)
+{
+    /*
+    t_mtx           fork;
+    unsigned int    fork_id;
+    */
+    long long i;
+
+    i = 0;
+    symposium->fork = malloc (symposium->n_philo * (sizeof(t_fork)));
+    if (!symposium->fork)
+        error_exit("Malloc for fork failed\n"); //possibly free everything else
+    while ( i < symposium->n_philo)
+    {
+        symposium->fork[i].fork_id = i + 1;
+        if (pthread_mutex_init(&symposium->fork[i].fork, NULL))
+            error_exit("Mutex init fialed. Dig for error code for more info\n"); //possibly need to free stuff
+        i++;
+    }
+}
+
+static void init_philos(t_symposium *symposium)
 {
     /*
     int         id;
@@ -18,18 +39,21 @@ static void init_philo(t_symposium *symposium)
     long long i;
 
     i = 0;
-    while (symposium->n_philo > i) //possibly need to malloc arr of philos
+    symposium->philo = malloc (symposium->n_philo * (sizeof(t_philo)));
+    if (!symposium->philo)
+        error_exit("Malloc failed for philosophers\n"); //possibly free everything else
+    while (symposium->n_philo > i)
     {   
         symposium->philo[i].id = i + 1;
         symposium->philo[i].meals_counter = 0;
         symposium->philo[i].full = false;
-        symposium->philo[i].last_meal_time = 0; //??already initialize here?- check later usage tim eto die
-        symposium->philo[i]->right_fork = //??some fork id - if philo[i].id = i % 2 //==odd then right fork first
-        symposium->philo[i]->right_fork = //??some fork id - if !philo[i].id = i % 2 //==odd then left fork first
-        pthread_create(symposium->philo[i].thread_id, NULL, "some_function", "some arg for function");
+        symposium->philo[i].last_meal_time = 0;
+        symposium->philo[i].left_fork = &symposium->fork[i]; //make sure to implement deadlock save.. odd ones pick right first
+        symposium->philo[i].right_fork = &symposium->fork[(i + 1) % symposium->n_philo];
+        pthread_create(&symposium->philo[i].thread_id, NULL, "some_function", "some arg for function");
         symposium->philo[i].symposium = symposium;
+        i++;
     }
-
 }
 
 void init_symposium(t_symposium *symposium)
@@ -40,10 +64,6 @@ void init_symposium(t_symposium *symposium)
     //general handling
     t_philo *philo;
     t_fork *fork;
-
-    ->
-    t_mtx           fork;
-    unsigned int    fork_id;
     */
 
     struct timeval tv;
@@ -53,7 +73,10 @@ void init_symposium(t_symposium *symposium)
     symposium->finish_symposium = false;
 
     //-----philos-----//
-    init_philo(symposium);
+    init_forks(symposium);
+    init_philos(symposium);
+    //possibly pthread_join() of all threads in a loop???
+
    
 
 
