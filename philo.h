@@ -55,6 +55,7 @@ typedef struct s_symposium{
 void error_exit(const char *error_message);
 long long get_timestamp(void);
 void print_status(const char *message, t_philo *philo);
+void monitor(void *arg);
 
 //mains
 void parse_input(t_symposium *symposium, int argc, char **argv);

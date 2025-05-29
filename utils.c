@@ -25,18 +25,16 @@ void print_status(const char *message, t_philo *philo)
     pthread_mutex_unloc(&philo->symposium->print_lock);
 }
 
-void monitor(void *arg)
+void *monitor(void *arg)
 {
     //function to monitor if a philo is still alive 
-    //while symposium ! finished
-    //check time_to_die vs last_meal
     //if dead, immediately print death and free everything -> simulation stops
-    //wait usleep(1000) -> 1ms; 10 ms after death needs to be printed
     t_philo *philo = (t_philo *)arg;
 
     while(!philo->symposium->finish_symposium)
     {
-        if (philo->symposium->time_to_die < (philo->last_meal_time - get_timestamp())) //death condition - adjust
+        if ((philo->last_meal_time == 0 && (get_timestamp() - philo->symposium->start_symposium) > philo->symposium->time_to_die) \
+        || (philo->last_meal_time != 0 && (get_timestamp() - philo->last_meal_time > philo->symposium->time_to_die))) 
         {
             print_status("died", philo);
             philo->symposium->finish_symposium = true;
