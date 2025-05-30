@@ -11,7 +11,9 @@ void *philo_routine(void *arg)
 
     while (get_timestamp() < philo->symposium->start_symposium)
         usleep(50);
+
     death(philo); //might call monitor thread directly here. atm keep death() for readability
+    
     while (!philo->symposium->finish_symposium) //conditions is alive
     {
         take_up_fork(philo);// ->implement deadlock prevention
@@ -30,12 +32,18 @@ void start_symposium(t_symposium *symposium)
 {
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
-    symposium->start_symposium = get_timestamp() + 100; //hardcoded 100ms - time to spawn all philos
+    symposium->start_symposium = get_timestamp() + 100; //hardcoded 100ms - wa 10 * n_philo .. each philo has 10 ms time to spwan
 
     while (p < e)
     {
         pthread_create(&p->thread_id, NULL, philo_routine, p);
         p++;
+    }
+    if (symposium->n_meals != -1)
+    {
+        pthread_t *finish_thread;
+        pthread_create(&finish_thread, NULL, monitor_finish, symposium->philo);
+        pthread_detach(finish_thread);
     }
     t_philo *p = symposium->philo;
     while (p < e)

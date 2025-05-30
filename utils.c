@@ -23,7 +23,7 @@ void print_status(const char *message, t_philo *philo)
     pthread_mutex_lock(&philo->symposium->print_lock);
     if (!&philo->symposium->finish_symposium == true)
         printf("%lld, %lld, %s\n", get_timestamp() - philo->symposium->start_symposium, philo->id, message);
-    pthread_mutex_unloc(&philo->symposium->print_lock);
+    pthread_mutex_unlock(&philo->symposium->print_lock);
 }
 
 void *monitor(void *arg)
@@ -44,4 +44,27 @@ void *monitor(void *arg)
         usleep(1000);
     }
     return (NULL);
+}
+
+void *monitor_finish(void *arg)
+{
+
+    t_symposium *symposium = (t_philo *)arg;
+
+    bool all_full;
+    int i;
+
+    all_full = true;
+    i = 0;
+    while (i < symposium->n_philo)
+    {
+        if (symposium->philo[i].full = false)
+        {
+            all_full = false;
+            break;
+        }
+        i++;
+    }
+    if (all_full)
+        symposium->finish_symposium = true;
 }

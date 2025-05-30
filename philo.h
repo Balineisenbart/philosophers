@@ -61,6 +61,7 @@ void error_exit(const char *error_message, t_symposium *symposium);
 long long get_timestamp(void);
 void print_status(const char *message, t_philo *philo);
 void monitor(void *arg);
+void *monitor_finish(void *arg);
 
 //mains
 void parse_input(t_symposium *symposium, int argc, char **argv);
