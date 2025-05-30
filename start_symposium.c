@@ -32,14 +32,15 @@ void start_symposium(t_symposium *symposium)
     t_philo *e = p + symposium->n_philo;
     symposium->start_symposium = get_timestamp() + 100; //hardcoded 100ms - time to spawn all philos
 
-
     while (p < e)
-        pthread_create(&p++->thread_id, NULL, philo_routine, p);
+    {
+        pthread_create(&p->thread_id, NULL, philo_routine, p);
+        p++;
+    }
     t_philo *p = symposium->philo;
     while (p < e)
     {
         if (pthread_join(p++->id, NULL))
-            error_exit("pthread_join fialed. Dig for error code for more info\n"); //possibly need to free stuff; mutex_destroy.. other structs??
+            error_exit("pthread_join fialed. Dig for error code for more info\n", &symposium);
     }
-    
 }

@@ -11,20 +11,21 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-typedef pthread_mutex_t t_mtx;
 typedef struct s_symposium t_symposium;
 
 typedef struct s_forks{
 
-    t_mtx           fork;
+    pthread_mutex_t fork;
+    bool fork_mtx_init;
     unsigned int    fork_id;
+
 } t_fork;
 
 typedef struct s_philo{
     int         id;
     long long   meals_counter;
     bool        full;
-    long long   last_meal_time; //he dead?
+    long long   last_meal_time;
     t_fork      *right_fork;
     t_fork      *left_fork;
     pthread_t   thread_id;
@@ -48,11 +49,15 @@ typedef struct s_symposium{
     t_fork *fork;
     //print locking
     pthread_mutex_t print_lock;
+    //safety
+    bool print_lock_init;
+    bool philo_all;
+    bool fork_all;
 
 } t_symposium;
 
 //utils
-void error_exit(const char *error_message);
+void error_exit(const char *error_message, t_symposium *symposium);
 long long get_timestamp(void);
 void print_status(const char *message, t_philo *philo);
 void monitor(void *arg);

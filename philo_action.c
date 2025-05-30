@@ -25,5 +25,4 @@ void death(t_philo *philo)
 {
     pthread_create(&philo->monitor_id, NULL, monitor, &philo);
     pthread_detach(&philo->monitor_id);
-
 }

@@ -2,11 +2,12 @@
 #include "philo.h"
 
 
-void error_exit(const char *error_message)
+void error_exit(const char *error_message, t_symposium *symposium) //clean everything as well?? -> pass symposium also
 {
     printf("%s\n", error_message);
     printf("Valid Input Arguments: \n");
     printf("number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat] \n");
+    clean_up(&symposium);
     exit(EXIT_FAILURE);
 }
 
@@ -42,6 +43,5 @@ void *monitor(void *arg)
         }
         usleep(1000);
     }
-    //somehow clean all structs threads mutexes & exit
     return (NULL);
 }
