@@ -30,6 +30,10 @@ typedef struct s_philo{
     t_fork      *left_fork;
     pthread_t   thread_id;
     pthread_t   monitor_id;
+    pthread_mutex_t   meal_lock;
+    pthread_mutex_t full_lock;
+    bool meal_mtx_init;
+    bool full_mtx_init;
     t_symposium *symposium;
 
 } t_philo;
@@ -39,20 +43,23 @@ typedef struct s_symposium{
     long long n_philo;
     long long time_to_die;
     long long time_to_eat;
-    long long time_to_sleep; //in ms
+    long long time_to_sleep;
     long long n_meals;
     //needed for timestamp
     long long   start_symposium;
-    bool        finish_symposium; //death or all full
+    bool        finish_symposium;
     //general handling
     t_philo *philo;
     t_fork *fork;
     //print locking
     pthread_mutex_t print_lock;
+    pthread_mutex_t finish_lock;
     //safety
     bool print_lock_init;
     bool philo_all;
     bool fork_all;
+    bool finish_mtx_init;
+    bool flag;
 
 } t_symposium;
 
@@ -60,8 +67,8 @@ typedef struct s_symposium{
 void error_exit(const char *error_message, t_symposium *symposium);
 long long get_timestamp(void);
 void print_status(const char *message, t_philo *philo);
-void *monitor(void *arg);
-void *monitor_finish(void *arg);
+void *monitor_death(void *arg);
+void *monitor_full(void *arg);
 
 //mains
 void parse_input(t_symposium *symposium, int argc, char **argv);

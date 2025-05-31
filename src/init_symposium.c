@@ -35,10 +35,16 @@ static void init_philos(t_symposium *symposium)
         symposium->philo[i].id = i + 1;
         symposium->philo[i].meals_counter = 0;
         symposium->philo[i].full = false;
+        if (pthread_mutex_init(&symposium->philo[i].full_lock, NULL))
+            error_exit("Mutex init failed on full lock\n", symposium);
+        symposium->philo[i].full_mtx_init = true;
         symposium->philo[i].last_meal_time = 0;
         symposium->philo[i].left_fork = &symposium->fork[i];
         symposium->philo[i].right_fork = &symposium->fork[(i + 1) % symposium->n_philo];
         symposium->philo[i].symposium = symposium;
+        if (pthread_mutex_init(&symposium->philo[i].meal_lock, NULL))
+                error_exit("Mutex init failed for meal lock\n", symposium);
+        symposium->philo[i].meal_mtx_init = true,
         i++;
     }
 }
@@ -49,6 +55,9 @@ void init_symposium(t_symposium *symposium)
     symposium->finish_symposium = false;
     if (pthread_mutex_init(&symposium->print_lock, NULL))
         error_exit("Mutex init failed for print lock\n", symposium);
+    symposium->print_lock_init = true;
+    if (pthread_mutex_init(&symposium->finish_lock, NULL))
+        error_exit("Mutex init failed for finish lock\n", symposium);
     symposium->print_lock_init = true;
     init_forks(symposium);
     init_philos(symposium);

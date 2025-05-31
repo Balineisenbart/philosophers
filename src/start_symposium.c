@@ -5,14 +5,21 @@
 void *philo_routine(void *arg)
 {
     t_philo *philo = (t_philo *)arg;
+    bool finished;
 
     while (get_timestamp() < philo->symposium->start_symposium)
         usleep(50);
 
+        
     death(philo); //might call monitor thread directly here. atm keep death() for readability
     
-    while (!philo->symposium->finish_symposium)
+    while (1)
     {
+        pthread_mutex_lock(&philo->symposium->finish_lock);
+        finished = philo->symposium->finish_symposium;
+        pthread_mutex_unlock(&philo->symposium->finish_lock);
+        if (finished)
+            break;
         take_up_fork(philo);
         eating(philo);
         sleeping(philo);
@@ -35,7 +42,7 @@ void start_symposium(t_symposium *symposium)
     if (symposium->n_meals != -1)
     {
         pthread_t finish_thread;
-        pthread_create(&finish_thread, NULL, monitor_finish, symposium->philo);
+        pthread_create(&finish_thread, NULL, monitor_full, symposium);
         pthread_detach(finish_thread);
     }
     p = symposium->philo;
