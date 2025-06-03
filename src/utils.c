@@ -93,9 +93,9 @@ void *monitor_full(void *arg)
         }
         if (all_full) 
         {
-            pthread_mutex_lock(&symposium->print_lock);
+            pthread_mutex_lock(&symposium->finish_lock);
             symposium->finish_symposium = true;
-            pthread_mutex_unlock(&symposium->print_lock);
+            pthread_mutex_unlock(&symposium->finish_lock);
             break;
         }
     }

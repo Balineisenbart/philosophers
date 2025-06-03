@@ -29,6 +29,9 @@ void eating(t_philo *philo)
     philo->last_meal_time = get_timestamp() - philo->symposium->start_symposium;
     pthread_mutex_unlock(&philo->meal_lock);
     
+    usleep(philo->symposium->time_to_eat);
+    pthread_mutex_unlock(&philo->left_fork->fork);
+    pthread_mutex_unlock(&philo->right_fork->fork);
 
     philo->meals_counter++;
     //printf("\n### nb_meals:%lld - philo:%d ###\n", philo->meals_counter, philo->id); //!!!!!!!!!!!!!!!!!!!!!!dont print in final version
@@ -38,9 +41,7 @@ void eating(t_philo *philo)
         philo->full = true;
         pthread_mutex_unlock(&philo->full_lock);
     }
-    usleep(philo->symposium->time_to_eat);
-    pthread_mutex_unlock(&philo->left_fork->fork);
-    pthread_mutex_unlock(&philo->right_fork->fork);
+
 }
 
 void sleeping(t_philo *philo)
