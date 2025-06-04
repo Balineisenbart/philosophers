@@ -1,14 +1,13 @@
+??custom usleep??--nina-- while loop checking if duration is lower than time before entering loop
+??protect each mutex lock/unlock ... triple check
+
+
+
+when single philo dies program doesnt exit
+improve logic .. currently who takes the next fork? where is the cutoff when philos NEED to die??
 thinking does not always happen?
 
-make sure program doesnt print anything and exits after death
-
-endless loop when no meals_to_eat specified
-
-what to do when time_to_die < time_to_eat + time_to_sleep?
-->just dies??
-
-check if correct number of meals are consumed before exit
-
+single philo takes fork!
 
 {
 valgrind --tool=helgrind → data race detection.

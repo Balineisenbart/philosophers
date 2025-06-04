@@ -27,7 +27,7 @@ void print_status(const char *message, t_philo *philo)
     pthread_mutex_unlock(&philo->symposium->finish_lock);
 }
 
-void *monitor_death(void *arg)
+void *monitor_death(void *arg) //needs to exit when time_to_die < time_to_eat + time_to_sleep ... also single philo needs to die
 {
     t_philo *philo = (t_philo *)arg;
     long long last_meal;
@@ -45,9 +45,9 @@ void *monitor_death(void *arg)
         pthread_mutex_lock(&philo->meal_lock);
         last_meal = philo->last_meal_time;
         pthread_mutex_unlock(&philo->meal_lock);
-        
+
         if ((last_meal == 0 && ((get_timestamp() - philo->symposium->start_symposium) > philo->symposium->time_to_die)) \
-        || (last_meal != 0 && (((get_timestamp() - philo->symposium->start_symposium) - last_meal) > philo->symposium->time_to_die))) 
+        || (last_meal != 0 && (((get_timestamp() - philo->symposium->start_symposium) - last_meal) > philo->symposium->time_to_die)))
         {
             print_status("died", philo);
             pthread_mutex_lock(&philo->symposium->finish_lock);
@@ -55,7 +55,6 @@ void *monitor_death(void *arg)
             pthread_mutex_unlock(&philo->symposium->finish_lock);
             break;
         }
-        usleep(1000);
     }
     return (NULL);
 }

@@ -1,11 +1,6 @@
 
 #include "philo.h"
 
-
-//check for only positive
-//not > INT_MAX number od digits = 9 & when converted cmp to INT_MAX
-//only digits
-
 static bool is_space(char c)
 {
     return ((c >= 9 && c <= 13) || c == 32);
@@ -58,7 +53,7 @@ void parse_input(t_symposium *symposium, int argc, char **argv)
 {
     //there was some kind of threshold of 60ms ... input can not be smaller than 60ms??
     symposium->n_philo = ft_atol(argv[1], symposium);
-    symposium->time_to_die = ft_atol(argv[2], symposium) * 1000;
+    symposium->time_to_die = ft_atol(argv[2], symposium);
     symposium->time_to_eat = ft_atol(argv[3], symposium) * 1000;
     symposium->time_to_sleep = ft_atol(argv[4], symposium) * 1000;
     if (argc == 6)

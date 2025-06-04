@@ -31,7 +31,7 @@
     bool finish_mtx_init;
 */
 
-void clean_up(t_symposium *symposium)
+void clean_up(t_symposium *symposium) //pthread_join here??
 {
     t_fork *f = symposium->fork;
     t_fork *e_f = f + symposium->n_philo;

@@ -27,13 +27,12 @@ void eating(t_philo *philo)
     pthread_mutex_lock(&philo->meal_lock);
     philo->last_meal_time = get_timestamp() - philo->symposium->start_symposium;
     pthread_mutex_unlock(&philo->meal_lock);
-    
     usleep(philo->symposium->time_to_eat);
+
     pthread_mutex_unlock(&philo->left_fork->fork);
     pthread_mutex_unlock(&philo->right_fork->fork);
 
     philo->meals_counter++;
-    //printf("\n### nb_meals:%lld - philo:%d ###\n", philo->meals_counter, philo->id); //!!!!!!!!!!!!!!!!!!!!!!dont print in final version
     if (philo->meals_counter == philo->symposium->n_meals)
     {
         pthread_mutex_lock(&philo->full_lock);
@@ -51,7 +50,7 @@ void sleeping(t_philo *philo)
 
 void thinking(t_philo *philo)
 {
-    //usleep to be sure it prints??
+    //usleep to be sure it prints?? or only do when not instantly getting forks?
     print_status("is thinking", philo);
 }
 

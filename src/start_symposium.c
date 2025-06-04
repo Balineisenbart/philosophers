@@ -11,7 +11,7 @@ void *philo_routine(void *arg)
         usleep(50);
 
         
-    death(philo); //might call monitor thread directly here. atm keep death() for readability
+    //death(philo); //might call monitor thread directly here. atm keep death() for readability
     
     while (1)
     {
@@ -32,11 +32,13 @@ void start_symposium(t_symposium *symposium)
 {
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
-    symposium->start_symposium = get_timestamp() + 100; //hardcoded 100ms - wa 10 * n_philo .. each philo has 10 ms time to spwan
+    symposium->start_symposium = get_timestamp() + (50 * symposium->n_philo);
 
     while (p < e)
     {
         pthread_create(&p->thread_id, NULL, philo_routine, p);
+        pthread_create(&p->monitor_id, NULL, monitor_death, p); //keep here outside of routine??
+        pthread_detach(p->monitor_id);
         p++;
     }
     if (symposium->n_meals != -1)
@@ -46,7 +48,7 @@ void start_symposium(t_symposium *symposium)
         pthread_detach(finish_thread);
     }
     p = symposium->philo;
-    while (p < e)
+    while (p < e) //maybe do in cleanup?? -- ulimit -v <smaller memory>
     {
         if (pthread_join(p->thread_id, NULL))
             error_exit("pthread_join fialed. Dig for error code for more info\n", symposium);
