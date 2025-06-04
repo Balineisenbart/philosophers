@@ -23,7 +23,7 @@ void *philo_routine(void *arg)
         take_up_fork(philo);
         eating(philo);
         sleeping(philo);
-        thinking(philo); //need to implement wait condition!!
+        thinking(philo);
     }
     return (NULL);
 }

@@ -1,0 +1,28 @@
+thinking does not always happen?
+
+make sure program doesnt print anything and exits after death
+
+endless loop when no meals_to_eat specified
+
+what to do when time_to_die < time_to_eat + time_to_sleep?
+->just dies??
+
+check if correct number of meals are consumed before exit
+
+
+{
+valgrind --tool=helgrind → data race detection.
+
+valgrind --tool=drd → fewer false positives, works better for C++11 threads.
+
+check leaks for n_meals & w/o
+check leaks for proper ending & death
+->4x
+:::
+NO LEAK     when n_meals and died (program exits immediately)
+LEAK        when n_meals and died (program exits too late...still prints)
+:::
+
+make sure all threads finish before main finishes (double flag logic?)
+}
+

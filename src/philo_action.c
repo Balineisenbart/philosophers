@@ -1,8 +1,7 @@
 
 #include "philo.h"
 
-//subject specifically mentions.. philos shld avoid dying.. but also do not communicate...
-//still need thinking condition? or handled by itself ?
+//subject specifically mentions.. philos shld avoid dying.. but also do not communicate... ->are they allowed to die??
 void take_up_fork(t_philo *philo)
 {
     if (philo->id % 2 == 0)
@@ -52,9 +51,8 @@ void sleeping(t_philo *philo)
 
 void thinking(t_philo *philo)
 {
-    //while (some condition until eat again)
+    //usleep to be sure it prints??
     print_status("is thinking", philo);
-
 }
 
 void death(t_philo *philo)

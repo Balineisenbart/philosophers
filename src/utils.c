@@ -15,7 +15,7 @@ void error_exit(const char *error_message, t_symposium *symposium)
 long long get_timestamp(void)
 {
     struct timeval tv;
-    gettimeofday(&tv, NULL);
+    gettimeofday(&tv, NULL); //check if needs failure check
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
