@@ -71,7 +71,7 @@ void clean_up(t_symposium *symposium) //pthread_join here??
             {
                 if (pthread_mutex_destroy(&f->fork))
                 {
-                    printf ("Mutex destroy failed on fork\n");
+                    printf ("Mutex destroy failed on fork :: in clean_up\n");
                     exit(EXIT_FAILURE);
                 }
             }

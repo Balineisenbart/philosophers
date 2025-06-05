@@ -1,27 +1,19 @@
 ??custom usleep??--nina-- while loop checking if duration is lower than time before entering loop
 ??protect each mutex lock/unlock ... triple check
 
+usleep in main loop?
+usleep has a limit - so limit input for time_to_eat/sleep
 
-
-when single philo dies program doesnt exit
 improve logic .. currently who takes the next fork? where is the cutoff when philos NEED to die??
-thinking does not always happen?
+do thinking only when uneven number of philos?
 
-single philo takes fork!
+.>put join threads in clean_up?
 
-{
-valgrind --tool=helgrind → data race detection.
+.>EXIT not  -> do thread in main which detects exit_mtx_flag does clean_up
+->establish exit struct & exit thread -> uses finished_symposium to detect finish
+->exit just for failures .. separate flag (exit flag /similat to finished_symposium)
 
-valgrind --tool=drd → fewer false positives, works better for C++11 threads.
+..>what happens when clean_up when mutex is locked??
 
-check leaks for n_meals & w/o
-check leaks for proper ending & death
-->4x
-:::
-NO LEAK     when n_meals and died (program exits immediately)
-LEAK        when n_meals and died (program exits too late...still prints)
-:::
 
-make sure all threads finish before main finishes (double flag logic?)
-}
-
+.>protect for ulimit -v 

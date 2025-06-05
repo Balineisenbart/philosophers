@@ -2,27 +2,46 @@
 #include "philo.h"
 
 //subject specifically mentions.. philos shld avoid dying.. but also do not communicate... ->are they allowed to die??
+static void lonely_philo(t_philo *philo)
+{
+    print_status("has taken a fork", philo);
+    usleep(philo->symposium->time_to_die * 1000 + 10000);
+}
+
 void take_up_fork(t_philo *philo)
 {
-    if (philo->id % 2 == 0)
+    if (philo->symposium->n_philo == 1)
     {
-        pthread_mutex_lock(&philo->right_fork->fork);
-        print_status("has taken a fork", philo);
-        pthread_mutex_lock(&philo->left_fork->fork);
-        print_status("has taken a fork", philo);
+        lonely_philo(philo);
+        pthread_mutex_lock(&philo->symposium->finish_lock);
+        philo->symposium->finish_symposium = true;
+        pthread_mutex_unlock(&philo->symposium->finish_lock);
     }
     else
     {
-        pthread_mutex_lock(&philo->left_fork->fork);
-        print_status("has taken a fork", philo);
-        pthread_mutex_lock(&philo->right_fork->fork);
-        print_status("has taken a fork", philo);
+        
+        printf("inside nested loop\n");
+        if (philo->id % 2 == 0)
+        {
+            pthread_mutex_lock(&philo->right_fork->fork);
+            print_status("has taken a fork", philo);
+            pthread_mutex_lock(&philo->left_fork->fork);
+            print_status("has taken a fork", philo);
+        }
+        else
+        {
+            pthread_mutex_lock(&philo->left_fork->fork);
+            print_status("has taken a fork", philo);
+            pthread_mutex_lock(&philo->right_fork->fork);
+            print_status("has taken a fork", philo);
+        }
     }
 }
 
 void eating(t_philo *philo)
 {
     print_status("is eating", philo);
+    printf("inside eating\n");
 
     pthread_mutex_lock(&philo->meal_lock);
     philo->last_meal_time = get_timestamp() - philo->symposium->start_symposium;
