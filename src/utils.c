@@ -1,6 +1,21 @@
 
 #include "philo.h"
 
+void ft_usleep(long long duration, t_symposium *symposium)
+{
+    long long start = get_timestamp();
+    while ((get_timestamp() - start) < duration)
+    {
+        pthread_mutex_lock(&symposium->finish_lock);
+        if (symposium->finish_symposium)
+        {
+            pthread_mutex_unlock(&symposium->finish_lock);
+            break;
+        }
+        pthread_mutex_unlock(&symposium->finish_lock);
+        usleep(duration / 10);
+    }
+}
 
 int error_exit(const char *error_message, t_symposium *symposium)
 {
@@ -10,52 +25,66 @@ int error_exit(const char *error_message, t_symposium *symposium)
     if (symposium->flag)
         clean_up(symposium);
     return (1);    
-    //symposium->error_exit = true;
 }
 
 long long get_timestamp(void)
 {
     struct timeval tv;
     gettimeofday(&tv, NULL); //check if needs failure check
-    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+    return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
 
 void print_status(const char *message, t_philo *philo)
 {
+    long long now;
+    long long symposium_time;
+
+    now = get_timestamp();
+    symposium_time = now - philo->symposium->start_symposium;
     pthread_mutex_lock(&philo->symposium->finish_lock);
     if (!philo->symposium->finish_symposium)
-        printf("%lld %d %s\n", get_timestamp() - philo->symposium->start_symposium, philo->id, message);
+        printf("%lld %d %s\n", symposium_time, philo->id, message);
     pthread_mutex_unlock(&philo->symposium->finish_lock);
 }
 
 void *monitor_death(void *arg)
 {
-    t_philo *philo = (t_philo *)arg;
+    t_symposium *symposium = (t_symposium *)arg;
+    t_philo *p = symposium->philo;
+    t_philo *e = p + symposium->n_philo;
+    t_philo *cur;
     long long last_meal;
     
     while(1)
     {
-        pthread_mutex_lock(&philo->symposium->finish_lock);
-        if (philo->symposium->finish_symposium)
+        pthread_mutex_lock(&symposium->finish_lock);
+        if (symposium->finish_symposium)
         {
-            pthread_mutex_unlock(&philo->symposium->finish_lock);
+            pthread_mutex_unlock(&symposium->finish_lock);
             break;
         }
-        pthread_mutex_unlock(&philo->symposium->finish_lock);
+        pthread_mutex_unlock(&symposium->finish_lock);
         
-        pthread_mutex_lock(&philo->meal_lock);
-        last_meal = philo->last_meal_time;
-        pthread_mutex_unlock(&philo->meal_lock);
-
-        if ((last_meal == 0 && ((get_timestamp() - philo->symposium->start_symposium) > philo->symposium->time_to_die)) \
-        || (last_meal != 0 && (((get_timestamp() - philo->symposium->start_symposium) - last_meal) > philo->symposium->time_to_die)))
+        cur = p;
+        while (cur < e)
         {
-            print_status("died", philo);
-            pthread_mutex_lock(&philo->symposium->finish_lock);
-            philo->symposium->finish_symposium = true;
-            pthread_mutex_unlock(&philo->symposium->finish_lock);
-            break;
+            pthread_mutex_lock(&cur->meal_lock);
+            last_meal = cur->last_meal_time;
+
+            if ((last_meal == 0 && ((get_timestamp() - cur->symposium->start_symposium) > cur->symposium->time_to_die)) \
+            || (last_meal != 0 && (((get_timestamp() - cur->symposium->start_symposium) - last_meal) > cur->symposium->time_to_die)))
+            {
+                print_status("died", cur);
+                pthread_mutex_lock(&cur->symposium->finish_lock);
+                cur->symposium->finish_symposium = true;
+                pthread_mutex_unlock(&cur->symposium->finish_lock);
+                pthread_mutex_unlock(&cur->meal_lock);
+                break;
+            }
+            pthread_mutex_unlock(&cur->meal_lock);
+            cur++;
         }
+        usleep(1);
     }
     return (NULL);
 }
@@ -98,6 +127,7 @@ void *monitor_full(void *arg)
             pthread_mutex_unlock(&symposium->finish_lock);
             break;
         }
+        usleep(1);
     }
     return (NULL);      
 }

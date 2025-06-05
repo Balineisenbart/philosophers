@@ -11,6 +11,8 @@ static void lonely_philo(t_philo *philo)
 
 void take_up_fork(t_philo *philo)
 {
+    philo->left_fork_locked = false;
+    philo->right_fork_locked = false;
     if (philo->symposium->n_philo == 1)
         lonely_philo(philo);
     else
@@ -18,19 +20,19 @@ void take_up_fork(t_philo *philo)
         if (philo->id % 2 == 0)
         {
             pthread_mutex_lock(&philo->right_fork->fork); //what if philo dies here already -> no unlocking.. do is locked flag? unlock in cleanup
-            //philo->right_fork->is_locked = true;
+            philo->right_fork_locked = true;
             print_status("has taken a fork", philo);
             pthread_mutex_lock(&philo->left_fork->fork);
-            //philo->left_fork->is_locked = true;
+            philo->left_fork_locked = true;
             print_status("has taken a fork", philo);
         }
         else
         {
             pthread_mutex_lock(&philo->left_fork->fork);
-            //philo->left_fork->is_locked = true;
+            philo->left_fork_locked = true;
             print_status("has taken a fork", philo);
             pthread_mutex_lock(&philo->right_fork->fork);
-            //philo->right_fork->is_locked = true;
+            philo->right_fork_locked = true;
             print_status("has taken a fork", philo);
         }
     }
@@ -46,9 +48,9 @@ void eating(t_philo *philo)
     usleep(philo->symposium->time_to_eat);
 
     pthread_mutex_unlock(&philo->left_fork->fork);
-    //philo->left_fork->is_locked = false;
+    philo->left_fork_locked = false;
     pthread_mutex_unlock(&philo->right_fork->fork);
-    //philo->right_fork->is_locked = false;
+    philo->right_fork_locked = false;
 
     philo->meals_counter++;
     if (philo->meals_counter == philo->symposium->n_meals)

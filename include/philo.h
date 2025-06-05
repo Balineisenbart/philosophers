@@ -38,6 +38,9 @@ typedef struct s_philo{
     bool full_mtx_init;
     t_symposium *symposium;
 
+    bool left_fork_locked;
+    bool right_fork_locked;
+
 } t_philo;
 
 typedef struct s_symposium{

@@ -39,7 +39,16 @@ void *philo_routine(void *arg)  //-every action needs a check for finsh
         if (finished)
             break;
         thinking(philo);
-
+    }
+    if (philo->left_fork_locked)
+    {
+        pthread_mutex_unlock(&philo->left_fork->fork);
+        philo->left_fork_locked = false;
+    }
+    if (philo->right_fork_locked)
+    {
+        pthread_mutex_unlock(&philo->right_fork->fork);
+        philo->right_fork_locked = false;
     }
     return (NULL);
 }
@@ -54,22 +63,17 @@ void start_symposium(t_symposium *symposium)
     while (p < e)
     {
         pthread_create(&p->thread_id, NULL, philo_routine, p);
-        pthread_create(&p->monitor_id, NULL, monitor_death, p); //keep here outside of routine??
-        pthread_detach(p->monitor_id);
         p++;
     }
+    pthread_t death_thread;
+    pthread_create(&death_thread, NULL, monitor_death, symposium); //keep here outside of routine??
+    pthread_detach(death_thread);
     if (symposium->n_meals != -1)
     {
         pthread_t finish_thread;
         pthread_create(&finish_thread, NULL, monitor_full, symposium);
         pthread_detach(finish_thread);
     }
-    p = symposium->philo;
-    while (p < e) //maybe do in cleanup?? -- ulimit -v <smaller memory>
-    {
-        if (pthread_join(p->thread_id, NULL))
-            error_exit("pthread_join fialed. Dig for error code for more info\n", symposium);
-        p++;
-    }
+    //used to join here    
 }
 

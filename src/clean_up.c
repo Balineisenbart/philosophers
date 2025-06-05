@@ -38,6 +38,13 @@ int clean_up(t_symposium *symposium) //pthread_join here??
     t_philo *p = symposium->philo;
     t_philo *e_p = p + symposium->n_philo;
 
+    while (p < e_p) //maybe do in cleanup?? -- ulimit -v <smaller memory>
+    {
+        if (pthread_join(p->thread_id, NULL))
+            error_exit("pthread_join fialed. Dig for error code for more info\n", symposium);
+        p++;
+    }
+    p = symposium->philo;
     if (symposium->philo_all)
     {
          while (p < e_p)
@@ -58,10 +65,6 @@ int clean_up(t_symposium *symposium) //pthread_join here??
                     return (1);
                 }
             }
-            /*if(p->right_fork->is_locked == true)
-                pthread_mutex_unlock(&p->right_fork->fork);
-            if(p->left_fork->is_locked == true)
-                pthread_mutex_unlock(&p->left_fork->fork);*/
             p++;
         }
         free(symposium->philo);

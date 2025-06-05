@@ -1,20 +1,18 @@
-??custom usleep??--nina-- while loop checking if duration is lower than time before entering loop
 
 .>!!protect each mutex lock/unlock/create ... triple check
 .>trace each error_exit back to main with return(1)
     "init_symposium, start_symposium.. EVERYWHERE"
+    ->>
+if (pthread_mutex_lock(&mutex) != 0)
+    return (error_exit("Mutex lock failed", symposium));
 
+
+add ft_usleep
 usleep in main loop?
 usleep has a limit - so limit input for time_to_eat/sleep
 
 improve logic .. currently who takes the next fork? where is the cutoff when philos NEED to die??
 do thinking only when uneven number of philos?
 
-.>put join threads in clean_up?
-
-
-.> can i stop all threads when monitor death triggers??
-"it seems that when onephilo dies, another one might still be alive, but clean_up already happens"
-"OR philo 2 is stopped while it is eating, thus fork is not unlocked"
 
 .>protect for ulimit -v 
