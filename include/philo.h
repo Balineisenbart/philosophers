@@ -19,6 +19,7 @@ typedef struct s_forks{
     pthread_mutex_t fork;
     bool fork_mtx_init;
     unsigned int    fork_id;
+    bool is_locked;
 
 } t_fork;
 
@@ -65,7 +66,7 @@ typedef struct s_symposium{
 } t_symposium;
 
 //utils
-void error_exit(const char *error_message, t_symposium *symposium);
+int error_exit(const char *error_message, t_symposium *symposium);
 long long get_timestamp(void);
 void print_status(const char *message, t_philo *philo);
 void *monitor_death(void *arg);
@@ -80,7 +81,7 @@ void        eating(t_philo *philo);
 void        sleeping(t_philo *philo);
 void        thinking(t_philo *philo);
 void        death(t_philo *philo);
-void clean_up(t_symposium *symposium);
+int clean_up(t_symposium *symposium);
 
 
 

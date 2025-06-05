@@ -31,7 +31,7 @@
     bool finish_mtx_init;
 */
 
-void clean_up(t_symposium *symposium) //pthread_join here??
+int clean_up(t_symposium *symposium) //pthread_join here??
 {
     t_fork *f = symposium->fork;
     t_fork *e_f = f + symposium->n_philo;
@@ -47,17 +47,21 @@ void clean_up(t_symposium *symposium) //pthread_join here??
                 if (pthread_mutex_destroy(&p->meal_lock))
                 {
                     printf ("Mutex destroy failed on meal_lock\n");
-                    exit(EXIT_FAILURE);
+                    return (1);
                 }
             }
             if (p->full_mtx_init)
             {
                 if(pthread_mutex_destroy(&p->full_lock))
-            {
+                {
                     printf ("Mutex destroy failed on full_lock\n");
-                    exit(EXIT_FAILURE);
+                    return (1);
+                }
             }
-            }
+            /*if(p->right_fork->is_locked == true)
+                pthread_mutex_unlock(&p->right_fork->fork);
+            if(p->left_fork->is_locked == true)
+                pthread_mutex_unlock(&p->left_fork->fork);*/
             p++;
         }
         free(symposium->philo);
@@ -68,11 +72,11 @@ void clean_up(t_symposium *symposium) //pthread_join here??
         while (f < e_f)
         {
             if (f->fork_mtx_init)
-            {
+            {                    
                 if (pthread_mutex_destroy(&f->fork))
                 {
                     printf ("Mutex destroy failed on fork :: in clean_up\n");
-                    exit(EXIT_FAILURE);
+                    return (1);
                 }
             }
             f++;
@@ -85,7 +89,7 @@ void clean_up(t_symposium *symposium) //pthread_join here??
         if (pthread_mutex_destroy(&symposium->print_lock))
         {
             printf ("Mutex destroy failed on print_lock\n");
-            exit(EXIT_FAILURE);
+            return (1);
         }
     }
     if (symposium->finish_mtx_init)
@@ -93,7 +97,8 @@ void clean_up(t_symposium *symposium) //pthread_join here??
         if (pthread_mutex_destroy(&symposium->finish_lock))
         {
             printf ("Mutex destroy failed on finish_lock\n");
-            exit(EXIT_FAILURE);
+            return (1);
         }
     }
+    return (0);
 }

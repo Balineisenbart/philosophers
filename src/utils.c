@@ -2,14 +2,15 @@
 #include "philo.h"
 
 
-void error_exit(const char *error_message, t_symposium *symposium)
+int error_exit(const char *error_message, t_symposium *symposium)
 {
     printf("%s\n", error_message);
     printf("Valid Input Arguments: \n");
     printf("number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat] \n");
     if (symposium->flag)
         clean_up(symposium);
-    exit(EXIT_FAILURE);
+    return (1);    
+    //symposium->error_exit = true;
 }
 
 long long get_timestamp(void)
@@ -27,7 +28,7 @@ void print_status(const char *message, t_philo *philo)
     pthread_mutex_unlock(&philo->symposium->finish_lock);
 }
 
-void *monitor_death(void *arg) //needs to exit when time_to_die < time_to_eat + time_to_sleep ... also single philo needs to die
+void *monitor_death(void *arg)
 {
     t_philo *philo = (t_philo *)arg;
     long long last_meal;

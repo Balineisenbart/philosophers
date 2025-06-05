@@ -1,5 +1,8 @@
 ??custom usleep??--nina-- while loop checking if duration is lower than time before entering loop
-??protect each mutex lock/unlock ... triple check
+
+.>!!protect each mutex lock/unlock/create ... triple check
+.>trace each error_exit back to main with return(1)
+    "init_symposium, start_symposium.. EVERYWHERE"
 
 usleep in main loop?
 usleep has a limit - so limit input for time_to_eat/sleep
@@ -9,11 +12,9 @@ do thinking only when uneven number of philos?
 
 .>put join threads in clean_up?
 
-.>EXIT not  -> do thread in main which detects exit_mtx_flag does clean_up
-->establish exit struct & exit thread -> uses finished_symposium to detect finish
-->exit just for failures .. separate flag (exit flag /similat to finished_symposium)
 
-..>what happens when clean_up when mutex is locked??
-
+.> can i stop all threads when monitor death triggers??
+"it seems that when onephilo dies, another one might still be alive, but clean_up already happens"
+"OR philo 2 is stopped while it is eating, thus fork is not unlocked"
 
 .>protect for ulimit -v 

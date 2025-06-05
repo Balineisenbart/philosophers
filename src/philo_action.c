@@ -2,6 +2,7 @@
 #include "philo.h"
 
 //subject specifically mentions.. philos shld avoid dying.. but also do not communicate... ->are they allowed to die??
+
 static void lonely_philo(t_philo *philo)
 {
     print_status("has taken a fork", philo);
@@ -11,28 +12,25 @@ static void lonely_philo(t_philo *philo)
 void take_up_fork(t_philo *philo)
 {
     if (philo->symposium->n_philo == 1)
-    {
         lonely_philo(philo);
-        pthread_mutex_lock(&philo->symposium->finish_lock);
-        philo->symposium->finish_symposium = true;
-        pthread_mutex_unlock(&philo->symposium->finish_lock);
-    }
     else
     {
-        
-        printf("inside nested loop\n");
         if (philo->id % 2 == 0)
         {
-            pthread_mutex_lock(&philo->right_fork->fork);
+            pthread_mutex_lock(&philo->right_fork->fork); //what if philo dies here already -> no unlocking.. do is locked flag? unlock in cleanup
+            //philo->right_fork->is_locked = true;
             print_status("has taken a fork", philo);
             pthread_mutex_lock(&philo->left_fork->fork);
+            //philo->left_fork->is_locked = true;
             print_status("has taken a fork", philo);
         }
         else
         {
             pthread_mutex_lock(&philo->left_fork->fork);
+            //philo->left_fork->is_locked = true;
             print_status("has taken a fork", philo);
             pthread_mutex_lock(&philo->right_fork->fork);
+            //philo->right_fork->is_locked = true;
             print_status("has taken a fork", philo);
         }
     }
@@ -41,7 +39,6 @@ void take_up_fork(t_philo *philo)
 void eating(t_philo *philo)
 {
     print_status("is eating", philo);
-    printf("inside eating\n");
 
     pthread_mutex_lock(&philo->meal_lock);
     philo->last_meal_time = get_timestamp() - philo->symposium->start_symposium;
@@ -49,7 +46,9 @@ void eating(t_philo *philo)
     usleep(philo->symposium->time_to_eat);
 
     pthread_mutex_unlock(&philo->left_fork->fork);
+    //philo->left_fork->is_locked = false;
     pthread_mutex_unlock(&philo->right_fork->fork);
+    //philo->right_fork->is_locked = false;
 
     philo->meals_counter++;
     if (philo->meals_counter == philo->symposium->n_meals)

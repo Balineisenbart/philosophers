@@ -51,6 +51,8 @@ static void init_philos(t_symposium *symposium)
         if (pthread_mutex_init(&symposium->philo[i].meal_lock, NULL))
                 error_exit("Mutex init failed for meal lock\n", symposium);
         symposium->philo[i].meal_mtx_init = true,
+        symposium->philo[i].left_fork->is_locked = false;
+        symposium->philo[i].right_fork->is_locked = false;
         i++;
     }
 }
@@ -59,7 +61,7 @@ void init_symposium(t_symposium *symposium)
 {
     symposium->start_symposium = 0;
     symposium->finish_symposium = false;
-
+    
     if (pthread_mutex_init(&symposium->print_lock, NULL))
         error_exit("Mutex init failed for print lock\n", symposium);
     symposium->print_lock_init = true;
