@@ -65,6 +65,9 @@ typedef struct s_symposium{
     bool fork_all;
     bool finish_mtx_init;
     bool flag;
+    //monitoring
+    pthread_t death_thread;
+    pthread_t finish_thread;
 
 } t_symposium;
 

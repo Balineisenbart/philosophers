@@ -38,7 +38,10 @@ int clean_up(t_symposium *symposium) //pthread_join here??
     t_philo *p = symposium->philo;
     t_philo *e_p = p + symposium->n_philo;
 
-    while (p < e_p) //maybe do in cleanup?? -- ulimit -v <smaller memory>
+    pthread_join(symposium->death_thread, NULL);
+    if (symposium->n_meals != -1)
+        pthread_join(symposium->finish_thread, NULL);
+    while (p < e_p)
     {
         if (pthread_join(p->thread_id, NULL))
             error_exit("pthread_join fialed. Dig for error code for more info\n", symposium);
@@ -47,7 +50,7 @@ int clean_up(t_symposium *symposium) //pthread_join here??
     p = symposium->philo;
     if (symposium->philo_all)
     {
-         while (p < e_p)
+         while (p < e_p) //add usleep(1)?? to avoid destroy if just unlocked?? usleep(1) in evrey while loop???
         {
             if (p->meal_mtx_init)
             {

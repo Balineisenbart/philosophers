@@ -30,7 +30,7 @@ int error_exit(const char *error_message, t_symposium *symposium)
 long long get_timestamp(void)
 {
     struct timeval tv;
-    gettimeofday(&tv, NULL); //check if needs failure check
+    gettimeofday(&tv, NULL); //->can only fail when tv adress is wrongly passed. worst case i receive wrong actual time, but i work with relative time here so it doesnt matter
     return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
 
@@ -79,7 +79,7 @@ void *monitor_death(void *arg)
                 cur->symposium->finish_symposium = true;
                 pthread_mutex_unlock(&cur->symposium->finish_lock);
                 pthread_mutex_unlock(&cur->meal_lock);
-                break;
+                return (NULL);
             }
             pthread_mutex_unlock(&cur->meal_lock);
             cur++;

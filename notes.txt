@@ -15,4 +15,4 @@ improve logic .. currently who takes the next fork? where is the cutoff when phi
 do thinking only when uneven number of philos?
 
 
-.>protect for ulimit -v 
+.>protect for ulimit -v  (segfault??) -> return to main
