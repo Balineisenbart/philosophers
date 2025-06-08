@@ -12,7 +12,7 @@ static bool is_digit(char c)
 }
 
 
-static const char *valid_input(const char *str, t_symposium *symposium)
+static const char *valid_input(const char *str)
 {
     const char *number;
     int len;
@@ -51,7 +51,7 @@ static long long ft_atol(const char *str, t_symposium *symposium)
     long long nb;
 
     nb = 0;
-    if (!(str = valid_input(str, symposium)))
+    if (!(str = valid_input(str)))
         return (-1);
     while (is_digit(*str))
         nb = (nb * 10) + (*str++ - '0');
@@ -74,9 +74,10 @@ int parse_input(t_symposium *symposium, int argc, char **argv)
         return (1);
     if (argc == 6)
     {
-        if (!(symposium->n_meals = ft_atol(argv[5], symposium)))
+        if ((symposium->n_meals = ft_atol(argv[5], symposium)) <= 0)
             return (1);
     }
     else
         symposium->n_meals = -1;
+    return (0);
 }

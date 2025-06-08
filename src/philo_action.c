@@ -74,8 +74,10 @@ void thinking(t_philo *philo)
     print_status("is thinking", philo);
 }
 
+/*not anymore in use.. directly called in start symposium
 void death(t_philo *philo)
 {
     pthread_create(&philo->monitor_id, NULL, monitor_death, philo);
     pthread_detach(philo->monitor_id);
 }
+    */

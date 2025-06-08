@@ -54,7 +54,7 @@ void *philo_routine(void *arg)  //better handling of finish check
 }
 
 
-void start_symposium(t_symposium *symposium)
+int start_symposium(t_symposium *symposium)
 {
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
@@ -62,13 +62,18 @@ void start_symposium(t_symposium *symposium)
 
     while (p < e)
     {
-        pthread_create(&p->thread_id, NULL, philo_routine, p);
+        if (pthread_create(&p->thread_id, NULL, philo_routine, p))
+            return (error_exit("failed to create thread_id\n", symposium));
         p++;
     }
-    pthread_create(&symposium->death_thread, NULL, monitor_death, symposium);
+    if (pthread_create(&symposium->death_thread, NULL, monitor_death, symposium))
+        return (error_exit("failed to create death_thread\n", symposium));
+
     if (symposium->n_meals != -1)
     {
-        pthread_create(&symposium->finish_thread, NULL, monitor_full, symposium);
+        if (pthread_create(&symposium->finish_thread, NULL, monitor_full, symposium))
+            return (error_exit("failed to create finish/isfull_thread\n", symposium));
     }
+    return (0);
 }
 

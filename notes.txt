@@ -15,5 +15,6 @@ usleep has a limit - so limit input for time_to_eat/sleep
 improve logic .. currently who takes the next fork? where is the cutoff when philos NEED to die??
 do thinking only when uneven number of philos?
 
+print error when input == 0
 
 .>protect for ulimit -v  (segfault??) -> return to main

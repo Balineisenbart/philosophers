@@ -2,7 +2,7 @@
 
 #include "philo.h"
 
-//need to modularize .> clean mutex fork & print_lock separately
+//need to modularize
 //wa print_lock locked?? -> separate check??
 
 bool clean_up(t_symposium *symposium)
@@ -33,7 +33,7 @@ bool clean_up(t_symposium *symposium)
         if (pthread_join(p->thread_id, NULL))
         {
             printf("pthread_join thread_id fialed. Dig for error code for more info\n");
-             error_status = true;
+            error_status = true;
         }
         p++;
     }

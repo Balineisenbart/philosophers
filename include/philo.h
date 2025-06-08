@@ -87,7 +87,7 @@ void        eating(t_philo *philo);
 void        sleeping(t_philo *philo);
 void        thinking(t_philo *philo);
 void        death(t_philo *philo);
-int clean_up(t_symposium *symposium);
+bool clean_up(t_symposium *symposium);
 
 
 

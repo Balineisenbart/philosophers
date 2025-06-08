@@ -19,9 +19,10 @@ static int init_forks(t_symposium *symposium)
         symposium->fork[i].fork_id = i + 1;
         if (pthread_mutex_init(&symposium->fork[i].fork, NULL))
             return(error_exit("Mutex init fialed. Dig for error code for more info\n", symposium));
-        symposium->fork[i].fork_mtx_init = true; //added index
+        symposium->fork[i].fork_mtx_init = true;
         i++;
     }
+    return (0);
 }
 
 static int init_philos(t_symposium *symposium)
@@ -53,6 +54,7 @@ static int init_philos(t_symposium *symposium)
         symposium->philo[i].meal_mtx_init = true,
         i++;
     }
+    return (0);
 }
 
 int init_symposium(t_symposium *symposium)
@@ -68,8 +70,9 @@ int init_symposium(t_symposium *symposium)
         return(error_exit("Mutex init failed for finish lock\n", symposium));
     symposium->finish_mtx_init = true;
 
-    if (init_forks(symposium) <= 0)
-        return (-1);
-    if (init_philos(symposium) <= 0)
-        return (-1);
+    if (init_forks(symposium))
+        return (1);
+    if (init_philos(symposium))
+        return (1);
+    return (0);
 }
