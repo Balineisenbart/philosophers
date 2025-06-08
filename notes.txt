@@ -1,8 +1,9 @@
 
-.>!!protect each mutex lock/unlock/create ... triple check
-.>trace each error_exit back to main with return(1)
-    "init_symposium, start_symposium.. EVERYWHERE"
-    ->>
+.>!!protect each mutex create/join/mtx_init/mtx_destroy ... triple check
+
+..> in cleanup upon failure still needs to clean everything? or just stick with error
+
+
 if (pthread_mutex_lock(&mutex) != 0)
     return (error_exit("Mutex lock failed", symposium));
 
@@ -16,5 +17,3 @@ do thinking only when uneven number of philos?
 
 
 .>protect for ulimit -v  (segfault??) -> return to main
-
-what about input arg == 0?? forbidden??
