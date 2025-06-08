@@ -16,3 +16,5 @@ do thinking only when uneven number of philos?
 
 
 .>protect for ulimit -v  (segfault??) -> return to main
+
+what about input arg == 0?? forbidden??

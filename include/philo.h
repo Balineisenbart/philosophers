@@ -79,9 +79,9 @@ void *monitor_death(void *arg);
 void *monitor_full(void *arg);
 
 //mains
-void parse_input(t_symposium *symposium, int argc, char **argv);
-void init_symposium(t_symposium *symposium);
-void start_symposium(t_symposium *symposium);
+int parse_input(t_symposium *symposium, int argc, char **argv);
+int init_symposium(t_symposium *symposium);
+int start_symposium(t_symposium *symposium);
 void        take_up_fork(t_philo *philo);
 void        eating(t_philo *philo);
 void        sleeping(t_philo *philo);

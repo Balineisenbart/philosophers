@@ -2,7 +2,7 @@
 #include "philo.h"
 
 
-void *philo_routine(void *arg)  //-every action needs a check for finsh
+void *philo_routine(void *arg)  //better handling of finish check
 {
     t_philo *philo = (t_philo *)arg;
     bool finished;
@@ -65,15 +65,10 @@ void start_symposium(t_symposium *symposium)
         pthread_create(&p->thread_id, NULL, philo_routine, p);
         p++;
     }
-    //pthread_t death_thread;
-    pthread_create(&symposium->death_thread, NULL, monitor_death, symposium); //keep here outside of routine??
-    //pthread_detach(death_thread);
+    pthread_create(&symposium->death_thread, NULL, monitor_death, symposium);
     if (symposium->n_meals != -1)
     {
-        //pthread_t finish_thread;
         pthread_create(&symposium->finish_thread, NULL, monitor_full, symposium);
-        //pthread_detach(finish_thread);
     }
-    //used to join here    
 }
 

@@ -5,52 +5,34 @@
 //need to modularize .> clean mutex fork & print_lock separately
 //wa print_lock locked?? -> separate check??
 
-
-/*
-    //general handling
-    t_philo *philo;                                  ->free
-            pthread_t   thread_id;        ->detatch
-            pthread_t   monitor_id;       ->detatch
-            pthread_mutex_t   meal_lock;  ->destroy
-            pthread_mutex_t full_lock;    ->destroy
-            bool meal_mtx_init;
-            bool full_mtx_init;
-
-    t_fork *fork;                            ->free
-            pthread_mutex_t fork; ->destroy
-            bool fork_mtx_init;
-
-    //print locking
-    pthread_mutex_t print_lock;  ->destroy
-    pthread_mutex_t finish_lock; ->destroy
-
-    //safety
-    bool print_lock_init;
-    bool philo_all;
-    bool fork_all;
-    bool finish_mtx_init;
-*/
-
-int clean_up(t_symposium *symposium) //pthread_join here??
+int clean_up(t_symposium *symposium)
 {
     t_fork *f = symposium->fork;
     t_fork *e_f = f + symposium->n_philo;
     t_philo *p = symposium->philo;
     t_philo *e_p = p + symposium->n_philo;
 
-    pthread_join(symposium->death_thread, NULL);
+    if (pthread_join(symposium->death_thread, NULL))
+    {
+        printf("pthread_join death_thread fialed. Dig for error code for more info\n");
+        return(1);
+
+    }
     if (symposium->n_meals != -1)
         pthread_join(symposium->finish_thread, NULL);
     while (p < e_p)
     {
         if (pthread_join(p->thread_id, NULL))
-            error_exit("pthread_join fialed. Dig for error code for more info\n", symposium);
+        {
+            printf("pthread_join thread_id fialed. Dig for error code for more info\n");
+            return(1);
+        }
         p++;
     }
     p = symposium->philo;
     if (symposium->philo_all)
     {
-         while (p < e_p) //add usleep(1)?? to avoid destroy if just unlocked?? usleep(1) in evrey while loop???
+         while (p < e_p)
         {
             if (p->meal_mtx_init)
             {

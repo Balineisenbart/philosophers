@@ -24,7 +24,7 @@ int error_exit(const char *error_message, t_symposium *symposium)
     printf("number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat] \n");
     if (symposium->flag)
         clean_up(symposium);
-    return (1);    
+    return (-1);    
 }
 
 long long get_timestamp(void)
