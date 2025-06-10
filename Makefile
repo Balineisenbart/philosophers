@@ -3,7 +3,7 @@ RED = \033[0;31m
 RESET = \033[0m
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=thread -pthread -Iinclude -g3
+CFLAGS = -Wall -Wextra -Werror -pthread -Iinclude -g3
 #-fsanitize=thread 
 
 SRCS = src/main.c src/parse_input.c src/init_symposium.c src/start_symposium.c \
