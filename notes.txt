@@ -15,6 +15,8 @@ print error when input == 0
 
 limit inputs to min 60ms ->OS tasks scheduling limits
 
+protect any get_timestamp call
+
 -----------
 ./philo 5 800 200 200
 ->death eventually and random timepoints

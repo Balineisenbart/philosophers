@@ -1,14 +1,27 @@
 
 #include "philo.h"
 
+void assembly_complete(t_symposium *symposium)
+{
+    while (1)
+    {
+        pthread_mutex_lock(&symposium->assembly_lock);
+        if (symposium->complete_assembly == true)
+        {
+            pthread_mutex_unlock(&symposium->assembly_lock);
+            break;
+        }
+        pthread_mutex_unlock(&symposium->assembly_lock);   
+        ft_usleep(10, symposium);
+    }
+}
 
-void *philo_routine(void *arg)  //better handling of finish check
+void *philo_routine(void *arg)
 {
     t_philo *philo = (t_philo *)arg;
     bool finished;
 
-    while (get_timestamp() < philo->symposium->start_symposium)
-        usleep(50);
+    assembly_complete(philo->symposium);
     
     while (1)
     {
@@ -38,7 +51,7 @@ void *philo_routine(void *arg)  //better handling of finish check
         pthread_mutex_unlock(&philo->symposium->finish_lock);
         if (finished)
             break;
-        thinking(philo);
+        thinking(philo, true);
     }
     if (philo->left_fork_locked)
     {
@@ -54,11 +67,12 @@ void *philo_routine(void *arg)  //better handling of finish check
 }
 
 
+
 int start_symposium(t_symposium *symposium)
 {
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
-    symposium->start_symposium = get_timestamp() + (50 * symposium->n_philo);
+
 
     while (p < e)
     {
@@ -66,6 +80,14 @@ int start_symposium(t_symposium *symposium)
             return (error_exit("failed to create thread_id\n", symposium));
         p++;
     }
+
+    pthread_mutex_lock(&symposium->assembly_lock);
+    symposium->complete_assembly = true;
+    pthread_mutex_unlock(&symposium->assembly_lock);
+
+    symposium->start_symposium = get_timestamp();
+
+
     if (pthread_create(&symposium->death_thread, NULL, monitor_death, symposium))
         return (error_exit("failed to create death_thread\n", symposium));
 

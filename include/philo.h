@@ -59,12 +59,15 @@ typedef struct s_symposium{
     //print locking
     pthread_mutex_t print_lock;
     pthread_mutex_t finish_lock;
+    pthread_mutex_t assembly_lock;
     //safety
     bool print_lock_init;
     bool philo_all;
     bool fork_all;
     bool finish_mtx_init;
     bool flag;
+    bool complete_assembly;
+    bool assembly_lock_init;
     //monitoring
     pthread_t death_thread;
     pthread_t finish_thread;
@@ -79,16 +82,17 @@ void *monitor_death(void *arg);
 void *monitor_full(void *arg);
 
 //mains
-int parse_input(t_symposium *symposium, int argc, char **argv);
-int init_symposium(t_symposium *symposium);
-int start_symposium(t_symposium *symposium);
+int         parse_input(t_symposium *symposium, int argc, char **argv);
+int         init_symposium(t_symposium *symposium);
+int         start_symposium(t_symposium *symposium);
 void        take_up_fork(t_philo *philo);
 void        eating(t_philo *philo);
 void        sleeping(t_philo *philo);
-void        thinking(t_philo *philo);
-void        death(t_philo *philo);
-bool clean_up(t_symposium *symposium);
-
+void        thinking(t_philo *philo, bool pre_symposium);
+bool        clean_up(t_symposium *symposium);
+void        ft_usleep(long long duration, t_symposium *symposium);
+void        assembly_complete(t_symposium *symposium);
+void desynchronize(t_philo *philo);
 
 
 #endif

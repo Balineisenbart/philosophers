@@ -19,7 +19,7 @@ void take_up_fork(t_philo *philo)
     {
         if (philo->id % 2 == 0)
         {
-            pthread_mutex_lock(&philo->right_fork->fork); //what if philo dies here already -> no unlocking.. do is locked flag? unlock in cleanup
+            pthread_mutex_lock(&philo->right_fork->fork);
             philo->right_fork_locked = true;
             print_status("has taken a fork", philo);
             pthread_mutex_lock(&philo->left_fork->fork);
@@ -68,16 +68,19 @@ void sleeping(t_philo *philo)
     usleep(philo->symposium->time_to_sleep);
 }
 
-void thinking(t_philo *philo)
+void thinking(t_philo *philo, bool pre_symposium)
 {
-    //usleep to be sure it prints?? or only do when not instantly getting forks?
-    print_status("is thinking", philo);
+    long long t_max;
+
+    if (pre_symposium)
+        print_status("is thinking", philo);
+
+    if (philo->symposium->n_philo % 2 == 1 && philo->id % 2 == 1)
+    {
+        t_max = philo->symposium->time_to_die - (philo->symposium->time_to_eat + philo->symposium->time_to_sleep);
+        if (t_max < 0)
+            t_max = 0;
+        ft_usleep(t_max / 2, philo->symposium);
+    }
 }
 
-/*not anymore in use.. directly called in start symposium
-void death(t_philo *philo)
-{
-    pthread_create(&philo->monitor_id, NULL, monitor_death, philo);
-    pthread_detach(philo->monitor_id);
-}
-    */

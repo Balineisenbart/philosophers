@@ -96,5 +96,13 @@ bool clean_up(t_symposium *symposium)
             error_status = true;
         }
     }
+    if (symposium->assembly_lock_init)
+    {
+        if (pthread_mutex_destroy(&symposium->assembly_lock))
+        {
+            printf ("Mutex destroy failed on assembly lock\n");
+            error_status = true;
+        }
+    }
     return (error_status); //still needs to be modularized to adhere to line count
 }

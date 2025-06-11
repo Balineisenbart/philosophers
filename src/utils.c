@@ -4,7 +4,10 @@
 void ft_usleep(long long duration, t_symposium *symposium)
 {
     long long start = get_timestamp();
-    while ((get_timestamp() - start) < duration)
+    long long elapsed;
+    long long rem;
+
+    while (1)
     {
         pthread_mutex_lock(&symposium->finish_lock);
         if (symposium->finish_symposium)
@@ -13,7 +16,16 @@ void ft_usleep(long long duration, t_symposium *symposium)
             break;
         }
         pthread_mutex_unlock(&symposium->finish_lock);
-        usleep(duration / 10);
+
+        elapsed = get_timestamp() - start;
+        if (elapsed >= duration)
+            break;
+
+        rem = duration - elapsed;
+        if (rem > 1000)
+            usleep(rem / 2);
+        else
+            usleep(100);
     }
 }
 
@@ -30,7 +42,8 @@ int error_exit(const char *error_message, t_symposium *symposium)
 long long get_timestamp(void)
 {
     struct timeval tv;
-    gettimeofday(&tv, NULL); //->can only fail when tv adress is wrongly passed. worst case i receive wrong actual time, but i work with relative time here so it doesnt matter
+    if (gettimeofday(&tv, NULL))
+        return (-1); // check if correct return value-->need to add chcek for <0 for everytime i call get_timestamü
     return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
 
@@ -54,7 +67,7 @@ void *monitor_death(void *arg)
     t_philo *e = p + symposium->n_philo;
     t_philo *cur;
     long long last_meal;
-    
+
     while(1)
     {
         pthread_mutex_lock(&symposium->finish_lock);

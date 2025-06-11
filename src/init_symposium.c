@@ -61,6 +61,7 @@ int init_symposium(t_symposium *symposium)
 {
     symposium->start_symposium = 0;
     symposium->finish_symposium = false;
+    symposium->complete_assembly = false;
     
     if (pthread_mutex_init(&symposium->print_lock, NULL))
         return(error_exit("Mutex init failed for print lock\n", symposium));
@@ -69,6 +70,10 @@ int init_symposium(t_symposium *symposium)
     if (pthread_mutex_init(&symposium->finish_lock, NULL))
         return(error_exit("Mutex init failed for finish lock\n", symposium));
     symposium->finish_mtx_init = true;
+
+    if (pthread_mutex_init(&symposium->assembly_lock, NULL))
+        return(error_exit("Mutex init failed for assembly lock\n", symposium));
+    symposium->assembly_lock_init = true;
 
     if (init_forks(symposium))
         return (1);
