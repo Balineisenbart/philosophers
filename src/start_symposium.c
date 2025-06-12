@@ -16,12 +16,21 @@ void assembly_complete(t_symposium *symposium)
     }
 }
 
+static void desync(t_symposium *symposium)
+{
+    if (symposium->philo->id % 2 == 0)
+        ft_usleep(3000, symposium);
+    else
+        thinking(symposium->philo, false);
+}
+
 void *philo_routine(void *arg)
 {
     t_philo *philo = (t_philo *)arg;
     bool finished;
 
     assembly_complete(philo->symposium);
+    desync(philo->symposium);
     
     while (1)
     {
@@ -37,7 +46,8 @@ void *philo_routine(void *arg)
         pthread_mutex_unlock(&philo->symposium->finish_lock);
         if (finished)
             break;
-        eating(philo);
+        if (eating(philo) == -1)
+            return (NULL);
 
         pthread_mutex_lock(&philo->symposium->finish_lock);
         finished = philo->symposium->finish_symposium;
@@ -85,7 +95,9 @@ int start_symposium(t_symposium *symposium)
     symposium->complete_assembly = true;
     pthread_mutex_unlock(&symposium->assembly_lock);
 
-    symposium->start_symposium = get_timestamp();
+    symposium->start_symposium = get_timestamp(symposium);
+    if (symposium->start_symposium == -1)
+        return (-1);
 
 
     if (pthread_create(&symposium->death_thread, NULL, monitor_death, symposium))
@@ -96,6 +108,7 @@ int start_symposium(t_symposium *symposium)
         if (pthread_create(&symposium->finish_thread, NULL, monitor_full, symposium))
             return (error_exit("failed to create finish/isfull_thread\n", symposium));
     }
+
     return (0);
 }
 

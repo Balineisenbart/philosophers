@@ -1,8 +1,10 @@
 
 
-add ft_usleep
-usleep in main loop?
+
 usleep has a limit - so limit input for time_to_eat/sleep
+protect ft_usleep ; return when -1
+protect print status -- or pass current time.. so utils do not need protection;
+
 
 improve logic .. currently who takes the next fork? where is the cutoff when philos NEED to die??
 do thinking only when uneven number of philos?
@@ -17,22 +19,5 @@ limit inputs to min 60ms ->OS tasks scheduling limits
 
 protect any get_timestamp call
 
------------
-./philo 5 800 200 200
-->death eventually and random timepoints
-
-./philo 5 800 200 200 3
-->sometimes death 
-...>improve how pilo threads are created? takes too much time?
-./philo 5 1000 200 200
-->fine!
-
-./philo 3 800 200 200 1
--->doesnt exit early enough!! some eat multiple times
-
-./philo 4 1000 500 50 2
-->dies in many cases
-
-
-
+----------------------------------------------------------------------------------------------
 

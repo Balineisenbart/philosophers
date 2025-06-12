@@ -1,12 +1,10 @@
 
 #include "philo.h"
 
-//subject specifically mentions.. philos shld avoid dying.. but also do not communicate... ->are they allowed to die??
-
 static void lonely_philo(t_philo *philo)
 {
     print_status("has taken a fork", philo);
-    usleep(philo->symposium->time_to_die * 1000 + 10000);
+    ft_usleep(philo->symposium->time_to_die * 1000 + 10000, philo->symposium);
 }
 
 void take_up_fork(t_philo *philo)
@@ -38,14 +36,19 @@ void take_up_fork(t_philo *philo)
     }
 }
 
-void eating(t_philo *philo)
+int eating(t_philo *philo)
 {
+    long long now;
+
+    now = get_timestamp((philo->symposium) - philo->symposium->start_symposium);
+    if (now == -1)
+        return (-1);
     print_status("is eating", philo);
 
     pthread_mutex_lock(&philo->meal_lock);
-    philo->last_meal_time = get_timestamp() - philo->symposium->start_symposium;
+    philo->last_meal_time = now;
     pthread_mutex_unlock(&philo->meal_lock);
-    usleep(philo->symposium->time_to_eat);
+    ft_usleep(philo->symposium->time_to_eat, philo->symposium);
 
     pthread_mutex_unlock(&philo->left_fork->fork);
     philo->left_fork_locked = false;
@@ -59,13 +62,13 @@ void eating(t_philo *philo)
         philo->full = true;
         pthread_mutex_unlock(&philo->full_lock);
     }
-
+    return (0);
 }
 
 void sleeping(t_philo *philo)
 {
     print_status("is sleeping", philo);
-    usleep(philo->symposium->time_to_sleep);
+    ft_usleep(philo->symposium->time_to_sleep, philo->symposium);
 }
 
 void thinking(t_philo *philo, bool pre_symposium)
@@ -75,9 +78,9 @@ void thinking(t_philo *philo, bool pre_symposium)
     if (pre_symposium)
         print_status("is thinking", philo);
 
-    if (philo->symposium->n_philo % 2 == 1 && philo->id % 2 == 1)
+    if (philo->symposium->n_philo % 2 == 1)// && philo->id % 2 == 1)
     {
-        t_max = philo->symposium->time_to_die - (philo->symposium->time_to_eat + philo->symposium->time_to_sleep);
+        t_max = (philo->symposium->time_to_die - (philo->symposium->time_to_eat + philo->symposium->time_to_sleep)) * 1000;
         if (t_max < 0)
             t_max = 0;
         ft_usleep(t_max / 2, philo->symposium);

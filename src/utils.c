@@ -1,13 +1,16 @@
 
 #include "philo.h"
 
-void ft_usleep(long long duration, t_symposium *symposium)
+int ft_usleep(long long duration, t_symposium *symposium, long long)
 {
-    long long start = get_timestamp();
-    long long elapsed;
-    long long rem;
+    long long start;
+    long long now;
 
-    while (1)
+    start = get_timestamp(symposium);
+    if (start == -1)
+        return (-1);
+    now = start;
+    while ((now - start) < duration)
     {
         pthread_mutex_lock(&symposium->finish_lock);
         if (symposium->finish_symposium)
@@ -17,15 +20,10 @@ void ft_usleep(long long duration, t_symposium *symposium)
         }
         pthread_mutex_unlock(&symposium->finish_lock);
 
-        elapsed = get_timestamp() - start;
-        if (elapsed >= duration)
-            break;
-
-        rem = duration - elapsed;
-        if (rem > 1000)
-            usleep(rem / 2);
-        else
-            usleep(100);
+        usleep(250);
+        now = get_timestamp(symposium);
+        if (now == -1)
+            return (-1);
     }
 }
 
@@ -39,26 +37,28 @@ int error_exit(const char *error_message, t_symposium *symposium)
     return (-1);    
 }
 
-long long get_timestamp(void)
+long long get_timestamp(t_symposium *symposium)
 {
     struct timeval tv;
     if (gettimeofday(&tv, NULL))
-        return (-1); // check if correct return value-->need to add chcek for <0 for everytime i call get_timestamü
+        return (error_exit("get_timeofday failed\n", symposium));
     return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
 
-void print_status(const char *message, t_philo *philo)
+void print_status(const char *message, t_philo *philo, long long time)
 {
-    long long now;
     long long symposium_time;
+    /*long long now;
 
-    now = get_timestamp();
-    symposium_time = now - philo->symposium->start_symposium;
+    now = get_timestamp(philo->symposium);*/
+
+    symposium_time = time - philo->symposium->start_symposium;
     pthread_mutex_lock(&philo->symposium->finish_lock);
     if (!philo->symposium->finish_symposium)
         printf("%lld %d %s\n", symposium_time, philo->id, message);
     pthread_mutex_unlock(&philo->symposium->finish_lock);
 }
+
 
 void *monitor_death(void *arg)
 {
@@ -67,6 +67,7 @@ void *monitor_death(void *arg)
     t_philo *e = p + symposium->n_philo;
     t_philo *cur;
     long long last_meal;
+    long long now;
 
     while(1)
     {
@@ -83,9 +84,12 @@ void *monitor_death(void *arg)
         {
             pthread_mutex_lock(&cur->meal_lock);
             last_meal = cur->last_meal_time;
+            now = get_timestamp(symposium);
+            if (now == -1)
+                return (NULL);
 
-            if ((last_meal == 0 && ((get_timestamp() - cur->symposium->start_symposium) > cur->symposium->time_to_die)) \
-            || (last_meal != 0 && (((get_timestamp() - cur->symposium->start_symposium) - last_meal) > cur->symposium->time_to_die)))
+            if ((last_meal == 0 && ((now - cur->symposium->start_symposium) > cur->symposium->time_to_die)) \
+            || (last_meal != 0 && (((now - cur->symposium->start_symposium) - last_meal) > cur->symposium->time_to_die)))
             {
                 print_status("died", cur);
                 pthread_mutex_lock(&cur->symposium->finish_lock);
@@ -97,7 +101,7 @@ void *monitor_death(void *arg)
             pthread_mutex_unlock(&cur->meal_lock);
             cur++;
         }
-        usleep(1);
+        ft_usleep(100, symposium);
     }
     return (NULL);
 }
@@ -140,7 +144,7 @@ void *monitor_full(void *arg)
             pthread_mutex_unlock(&symposium->finish_lock);
             break;
         }
-        usleep(1);
+        ft_usleep(100, symposium);
     }
     return (NULL);      
 }
