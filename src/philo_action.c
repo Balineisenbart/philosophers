@@ -40,9 +40,8 @@ int eating(t_philo *philo)
 {
     long long now;
 
-    now = get_timestamp((philo->symposium) - philo->symposium->start_symposium);
-    if (now == -1)
-        return (-1);
+    now = get_timestamp() - philo->symposium->start_symposium;
+
     print_status("is eating", philo);
 
     pthread_mutex_lock(&philo->meal_lock);

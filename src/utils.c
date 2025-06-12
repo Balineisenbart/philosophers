@@ -1,14 +1,12 @@
 
 #include "philo.h"
 
-int ft_usleep(long long duration, t_symposium *symposium, long long)
+void ft_usleep(long long duration, t_symposium *symposium)
 {
     long long start;
     long long now;
 
-    start = get_timestamp(symposium);
-    if (start == -1)
-        return (-1);
+    start = get_timestamp();
     now = start;
     while ((now - start) < duration)
     {
@@ -21,9 +19,7 @@ int ft_usleep(long long duration, t_symposium *symposium, long long)
         pthread_mutex_unlock(&symposium->finish_lock);
 
         usleep(250);
-        now = get_timestamp(symposium);
-        if (now == -1)
-            return (-1);
+        now = get_timestamp();
     }
 }
 
@@ -37,22 +33,21 @@ int error_exit(const char *error_message, t_symposium *symposium)
     return (-1);    
 }
 
-long long get_timestamp(t_symposium *symposium)
+long long get_timestamp(void)
 {
     struct timeval tv;
-    if (gettimeofday(&tv, NULL))
-        return (error_exit("get_timeofday failed\n", symposium));
+    gettimeofday(&tv, NULL);
     return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
 }
 
-void print_status(const char *message, t_philo *philo, long long time)
+void print_status(const char *message, t_philo *philo)
 {
     long long symposium_time;
-    /*long long now;
+    long long now;
 
-    now = get_timestamp(philo->symposium);*/
+    now = get_timestamp();
 
-    symposium_time = time - philo->symposium->start_symposium;
+    symposium_time = now - philo->symposium->start_symposium;
     pthread_mutex_lock(&philo->symposium->finish_lock);
     if (!philo->symposium->finish_symposium)
         printf("%lld %d %s\n", symposium_time, philo->id, message);
@@ -84,9 +79,7 @@ void *monitor_death(void *arg)
         {
             pthread_mutex_lock(&cur->meal_lock);
             last_meal = cur->last_meal_time;
-            now = get_timestamp(symposium);
-            if (now == -1)
-                return (NULL);
+            now = get_timestamp();
 
             if ((last_meal == 0 && ((now - cur->symposium->start_symposium) > cur->symposium->time_to_die)) \
             || (last_meal != 0 && (((now - cur->symposium->start_symposium) - last_meal) > cur->symposium->time_to_die)))

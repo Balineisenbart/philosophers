@@ -76,7 +76,7 @@ typedef struct s_symposium{
 
 //utils
 int error_exit(const char *error_message, t_symposium *symposium);
-long long get_timestamp(t_symposium *symposium);
+long long get_timestamp(void);
 void print_status(const char *message, t_philo *philo);
 void *monitor_death(void *arg);
 void *monitor_full(void *arg);
@@ -90,7 +90,7 @@ int        eating(t_philo *philo);
 void        sleeping(t_philo *philo);
 void        thinking(t_philo *philo, bool pre_symposium);
 bool        clean_up(t_symposium *symposium);
-int        ft_usleep(long long duration, t_symposium *symposium);
+void        ft_usleep(long long duration, t_symposium *symposium);
 void        assembly_complete(t_symposium *symposium);
 
 

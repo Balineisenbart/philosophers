@@ -95,10 +95,7 @@ int start_symposium(t_symposium *symposium)
     symposium->complete_assembly = true;
     pthread_mutex_unlock(&symposium->assembly_lock);
 
-    symposium->start_symposium = get_timestamp(symposium);
-    if (symposium->start_symposium == -1)
-        return (-1);
-
+    symposium->start_symposium = get_timestamp();
 
     if (pthread_create(&symposium->death_thread, NULL, monitor_death, symposium))
         return (error_exit("failed to create death_thread\n", symposium));
