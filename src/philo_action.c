@@ -69,18 +69,24 @@ void sleeping(t_philo *philo)
 
 void thinking(t_philo *philo, bool pre_symposium)
 {
-    long long t_max;
-
+    long long t_think;
+    long long t_eat;
+    long long t_sleep;
+    long long t_die;
 
     if (pre_symposium)
         print_status("is thinking", philo);
 
     if (philo->symposium->n_philo % 2 == 1)
     {
-        t_max = (philo->symposium->time_to_die * 1000) - (philo->symposium->time_to_eat + philo->symposium->time_to_sleep);
-        if (t_max < 0)
-            t_max = 0;
-        ft_usleep(t_max / 2, philo->symposium);
+        t_eat = philo->symposium->time_to_eat;
+        t_sleep = philo->symposium->time_to_sleep;
+        t_die = philo->symposium->time_to_die;
+        t_think = (t_die * 1000) - (t_eat + t_sleep);
+        if (t_think < 0)
+            t_think = 0;
+        ft_usleep(t_think / 2, philo->symposium);
     }
+    
 }
 

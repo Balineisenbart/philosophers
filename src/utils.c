@@ -1,6 +1,7 @@
 
 #include "philo.h"
 
+
 void ft_usleep(long long duration, t_symposium *symposium)
 {
     long long start;
@@ -48,6 +49,7 @@ void print_status(const char *message, t_philo *philo)
     now = get_timestamp();
 
     symposium_time = now - philo->symposium->start_symposium;
+
     pthread_mutex_lock(&philo->symposium->finish_lock);
     if (!philo->symposium->finish_symposium)
         printf("%lld %d %s\n", symposium_time, philo->id, message);
@@ -64,6 +66,8 @@ void *monitor_death(void *arg)
     long long last_meal;
     long long now;
 
+    assembly_complete(symposium);
+
     while(1)
     {
         pthread_mutex_lock(&symposium->finish_lock);
@@ -78,6 +82,7 @@ void *monitor_death(void *arg)
         while (cur < e)
         {
             pthread_mutex_lock(&cur->meal_lock);
+
             last_meal = cur->last_meal_time;
             now = get_timestamp();
 
@@ -108,6 +113,8 @@ void *monitor_full(void *arg)
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
     t_philo *cur;
+
+    assembly_complete(symposium);
 
     while (1)
     {

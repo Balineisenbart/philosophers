@@ -60,6 +60,7 @@ typedef struct s_symposium{
     pthread_mutex_t print_lock;
     pthread_mutex_t finish_lock;
     pthread_mutex_t assembly_lock;
+    pthread_mutex_t start_symposium_lock;
     //safety
     bool print_lock_init;
     bool philo_all;
@@ -68,6 +69,7 @@ typedef struct s_symposium{
     bool flag;
     bool complete_assembly;
     bool assembly_lock_init;
+    bool start_symposium_mtx_init;
     //monitoring
     pthread_t death_thread;
     pthread_t finish_thread;

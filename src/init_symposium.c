@@ -75,6 +75,10 @@ int init_symposium(t_symposium *symposium)
         return(error_exit("Mutex init failed for assembly lock\n", symposium));
     symposium->assembly_lock_init = true;
 
+    if (pthread_mutex_init(&symposium->start_symposium_lock, NULL))
+        return (error_exit("Mutex init failed on start symposium\n", symposium));
+    symposium->start_symposium_mtx_init = true;
+
     if (init_forks(symposium))
         return (1);
     if (init_philos(symposium))

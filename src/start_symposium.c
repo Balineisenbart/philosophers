@@ -18,10 +18,17 @@ void assembly_complete(t_symposium *symposium)
 
 static void desync(t_philo *philo)
 {
-    if (philo->id % 2 == 0)
-        ft_usleep(3000, philo->symposium);
+    if (philo->symposium->n_philo % 2 == 0)
+    {
+        if (philo->id % 2 == 0)
+            ft_usleep(30000, philo->symposium);
+    }
     else
-        thinking(philo, false);
+    {
+        if (philo->id % 2)
+            thinking(philo, false);
+    }
+
 }
 
 void *philo_routine(void *arg)
@@ -55,12 +62,14 @@ void *philo_routine(void *arg)
             break;
         sleeping(philo);
 
+//they must think in case eat > sleep; they will not think if eat <= sleep
         pthread_mutex_lock(&philo->symposium->finish_lock);
         finished = philo->symposium->finish_symposium;
         pthread_mutex_unlock(&philo->symposium->finish_lock);
         if (finished)
             break;
         thinking(philo, true);
+
     }
     if (philo->left_fork_locked)
     {
@@ -90,11 +99,6 @@ int start_symposium(t_symposium *symposium)
         p++;
     }
 
-    pthread_mutex_lock(&symposium->assembly_lock);
-    symposium->complete_assembly = true;
-    pthread_mutex_unlock(&symposium->assembly_lock);
-
-    symposium->start_symposium = get_timestamp();
 
     if (pthread_create(&symposium->death_thread, NULL, monitor_death, symposium))
         return (error_exit("failed to create death_thread\n", symposium));
@@ -104,6 +108,12 @@ int start_symposium(t_symposium *symposium)
         if (pthread_create(&symposium->finish_thread, NULL, monitor_full, symposium))
             return (error_exit("failed to create finish/isfull_thread\n", symposium));
     }
+
+    symposium->start_symposium = get_timestamp();
+
+    pthread_mutex_lock(&symposium->assembly_lock);
+    symposium->complete_assembly = true;
+    pthread_mutex_unlock(&symposium->assembly_lock);
 
     return (0);
 }

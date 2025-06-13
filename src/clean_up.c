@@ -104,5 +104,6 @@ bool clean_up(t_symposium *symposium)
             error_status = true;
         }
     }
+
     return (error_status); //still needs to be modularized to adhere to line count
 }
