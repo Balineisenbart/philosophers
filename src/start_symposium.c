@@ -19,7 +19,7 @@ void assembly_complete(t_symposium *symposium)
 static void desync(t_philo *philo)
 {
     if (philo->id % 2 == 0)
-        ft_usleep(300, philo->symposium);
+        ft_usleep(3000, philo->symposium);
     else
         thinking(philo, false);
 }

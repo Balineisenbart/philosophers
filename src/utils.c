@@ -6,8 +6,7 @@ void ft_usleep(long long duration, t_symposium *symposium)
     long long start;
     long long now;
 
-    printf("duration of usleep %lld\n", duration);
-    start = get_timestamp();
+    start = get_timestamp() * 1000;
     now = start;
     while ((now - start) < duration)
     {
@@ -20,10 +19,8 @@ void ft_usleep(long long duration, t_symposium *symposium)
         pthread_mutex_unlock(&symposium->finish_lock);
 
         usleep(250);
-        now = get_timestamp();
+        now = get_timestamp() * 1000;
     }
-    print_status("finish usleep", symposium->philo);
-    printf("duration: %lld\n", duration);
 }
 
 int error_exit(const char *error_message, t_symposium *symposium)
@@ -40,7 +37,7 @@ long long get_timestamp(void)
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000));
+    return ((tv.tv_sec * 1000LL) + (tv.tv_usec / 1000LL));
 }
 
 void print_status(const char *message, t_philo *philo)
