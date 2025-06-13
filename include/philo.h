@@ -86,7 +86,7 @@ int         parse_input(t_symposium *symposium, int argc, char **argv);
 int         init_symposium(t_symposium *symposium);
 int         start_symposium(t_symposium *symposium);
 void        take_up_fork(t_philo *philo);
-int        eating(t_philo *philo);
+void        eating(t_philo *philo);
 void        sleeping(t_philo *philo);
 void        thinking(t_philo *philo, bool pre_symposium);
 bool        clean_up(t_symposium *symposium);

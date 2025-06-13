@@ -6,6 +6,7 @@ void ft_usleep(long long duration, t_symposium *symposium)
     long long start;
     long long now;
 
+    printf("duration of usleep %lld\n", duration);
     start = get_timestamp();
     now = start;
     while ((now - start) < duration)
@@ -21,6 +22,8 @@ void ft_usleep(long long duration, t_symposium *symposium)
         usleep(250);
         now = get_timestamp();
     }
+    print_status("finish usleep", symposium->philo);
+    printf("duration: %lld\n", duration);
 }
 
 int error_exit(const char *error_message, t_symposium *symposium)

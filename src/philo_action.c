@@ -36,23 +36,23 @@ void take_up_fork(t_philo *philo)
     }
 }
 
-int eating(t_philo *philo)
+void eating(t_philo *philo)
 {
-    long long now;
-
-    now = get_timestamp() - philo->symposium->start_symposium;
-
     print_status("is eating", philo);
 
     pthread_mutex_lock(&philo->meal_lock);
-    philo->last_meal_time = now;
+    philo->last_meal_time = get_timestamp() - philo->symposium->start_symposium;
     pthread_mutex_unlock(&philo->meal_lock);
+
+    print_status("before usleep", philo);
     ft_usleep(philo->symposium->time_to_eat, philo->symposium);
+    print_status("after usleep", philo);
 
     pthread_mutex_unlock(&philo->left_fork->fork);
     philo->left_fork_locked = false;
     pthread_mutex_unlock(&philo->right_fork->fork);
     philo->right_fork_locked = false;
+
 
     philo->meals_counter++;
     if (philo->meals_counter == philo->symposium->n_meals)
@@ -61,7 +61,6 @@ int eating(t_philo *philo)
         philo->full = true;
         pthread_mutex_unlock(&philo->full_lock);
     }
-    return (0);
 }
 
 void sleeping(t_philo *philo)
@@ -74,12 +73,14 @@ void thinking(t_philo *philo, bool pre_symposium)
 {
     long long t_max;
 
+
     if (pre_symposium)
         print_status("is thinking", philo);
 
-    if (philo->symposium->n_philo % 2 == 1)// && philo->id % 2 == 1)
+    if (philo->symposium->n_philo % 2 == 1) // && philo->id % 2 == 1)
     {
-        t_max = (philo->symposium->time_to_die - (philo->symposium->time_to_eat + philo->symposium->time_to_sleep)) * 1000;
+        //print all values
+        t_max = (philo->symposium->time_to_die * 1000) - (philo->symposium->time_to_eat + philo->symposium->time_to_sleep);
         if (t_max < 0)
             t_max = 0;
         ft_usleep(t_max / 2, philo->symposium);

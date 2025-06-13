@@ -16,12 +16,12 @@ void assembly_complete(t_symposium *symposium)
     }
 }
 
-static void desync(t_symposium *symposium)
+static void desync(t_philo *philo)
 {
-    if (symposium->philo->id % 2 == 0)
-        ft_usleep(3000, symposium);
+    if (philo->id % 2 == 0)
+        ft_usleep(300, philo->symposium);
     else
-        thinking(symposium->philo, false);
+        thinking(philo, false);
 }
 
 void *philo_routine(void *arg)
@@ -30,7 +30,7 @@ void *philo_routine(void *arg)
     bool finished;
 
     assembly_complete(philo->symposium);
-    desync(philo->symposium);
+    desync(philo);
     
     while (1)
     {
@@ -46,8 +46,7 @@ void *philo_routine(void *arg)
         pthread_mutex_unlock(&philo->symposium->finish_lock);
         if (finished)
             break;
-        if (eating(philo) == -1)
-            return (NULL);
+        eating(philo);
 
         pthread_mutex_lock(&philo->symposium->finish_lock);
         finished = philo->symposium->finish_symposium;
