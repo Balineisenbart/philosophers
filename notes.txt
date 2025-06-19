@@ -4,6 +4,7 @@
 protect ft_usleep ; return when -1 !!!!!!
 
 .>protect for ulimit -v  (segfault??) -> return to main
+->join death /finish?? fails when not enough memory and tries to join death.. but at that point it is not joined yet
 
 ----------------------------------------------------------------------------------------------
 

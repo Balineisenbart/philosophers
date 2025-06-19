@@ -15,6 +15,7 @@ bool clean_up(t_symposium *symposium)
 
     if (pthread_join(symposium->death_thread, NULL))
     {
+        printf("\nentered join death\n");
         printf("pthread_join death_thread fialed. Dig for error code for more info\n");
         error_status = true;
     }
@@ -22,6 +23,7 @@ bool clean_up(t_symposium *symposium)
     {
         if (pthread_join(symposium->finish_thread, NULL))
         {
+            printf("\nentered join finish\n");
             printf("pthread_join finish_thread fialed. Dig for error code for more info\n");
             error_status = true;
         }
@@ -30,6 +32,7 @@ bool clean_up(t_symposium *symposium)
     {
         if (pthread_join(p->thread_id, NULL))
         {
+            printf("\nentered join thread id\n");
             printf("pthread_join thread_id fialed. Dig for error code for more info\n");
             error_status = true;
         }
