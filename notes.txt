@@ -1,15 +1,9 @@
 
 
 
-usleep has a limit - so limit input for time_to_eat/sleep
-protect ft_usleep ; return when -1
-protect print status -- or pass current time.. so utils do not need protection;
+protect ft_usleep ; return when -1 !!!!!!
 
 .>protect for ulimit -v  (segfault??) -> return to main
-
-limit inputs to min 60ms ->OS tasks scheduling limits
-
-protect any get_timestamp call
 
 ----------------------------------------------------------------------------------------------
 

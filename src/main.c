@@ -12,11 +12,11 @@ int main(int argc, char **argv)
     else
     {
         symposium.flag = true;
-        if (parse_input(&symposium, argc, argv))
+        if (parse_input(&symposium, argc, argv) == -1)
             return (1);
-        if (init_symposium(&symposium))
+        if (init_symposium(&symposium) == -1)
             return (1);
-        if (start_symposium(&symposium))
+        if (start_symposium(&symposium) == -1)
             return (1);
         if (clean_up(&symposium))
             return (1);

@@ -94,6 +94,7 @@ int start_symposium(t_symposium *symposium)
 
     while (p < e)
     {
+        printf("%d\n", symposium->flag);
         if (pthread_create(&p->thread_id, NULL, philo_routine, p))
             return (error_exit("failed to create thread_id\n", symposium));
         p++;

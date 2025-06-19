@@ -66,16 +66,16 @@ int parse_input(t_symposium *symposium, int argc, char **argv)
     //-------------------------------------------------------------------------------//
     if ((symposium->n_philo = ft_atol(argv[1], symposium)) <= 0)
         return (1);
-    if ((symposium->time_to_die = ft_atol(argv[2], symposium)) <= 0)
-        return (1);
-    if ((symposium->time_to_eat = ft_atol(argv[3], symposium) * 1000) <= 0)
-        return (1);
-    if ((symposium->time_to_sleep = ft_atol(argv[4], symposium) * 1000) <= 0)
-        return (1);
+    if ((symposium->time_to_die = ft_atol(argv[2], symposium)) <= 60)
+        return (error_exit("Time to die too small. Must be > 60ms due to OS limits", symposium));
+    if ((symposium->time_to_eat = ft_atol(argv[3], symposium) * 1000) <= 6000)
+        return (error_exit("Time to eat too small. Must be > 60ms due to OS limits", symposium));
+    if ((symposium->time_to_sleep = ft_atol(argv[4], symposium) * 1000) <= 6000)
+        return (error_exit("Time to sleep too small. Must be > 60ms due to OS limits", symposium));
     if (argc == 6)
     {
         if ((symposium->n_meals = ft_atol(argv[5], symposium)) <= 0)
-            return (1);
+            return (error_exit("Numvber of meals too small. Must be > 0", symposium));
     }
     else
         symposium->n_meals = -1;

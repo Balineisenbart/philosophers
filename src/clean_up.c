@@ -2,9 +2,6 @@
 
 #include "philo.h"
 
-//need to modularize
-//wa print_lock locked?? -> separate check??
-
 bool clean_up(t_symposium *symposium)
 {
     t_fork *f = symposium->fork;
@@ -14,6 +11,7 @@ bool clean_up(t_symposium *symposium)
     bool error_status;
 
     error_status = false;
+    printf("\nentered cleanup\n\n");
 
     if (pthread_join(symposium->death_thread, NULL))
     {
