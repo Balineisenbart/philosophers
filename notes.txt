@@ -4,10 +4,12 @@
 pretty sure everything works fine.
 
 .>test last time for leaks & races
-.>do norm (especially line countss)
+.>do norm (especially line counts)
+
 -->monitor full
+--->???
 -->monitor death
---->split to separate monitor file.c
+--->???
 
 -->clean_up: modularize into functions. clean up join; cleanup thread; cleanup mutex
 
@@ -20,11 +22,6 @@ pretty sure everything works fine.
 --->mtx init function
 -->init philos
 --->while loop init function
-
--->inside parse: valid_input()
---->return error message. 1 line instead of 4. return(error_message(arg))-->return NULL & prints
-
-
 
 ----------------------------------------------------------------------------------------------
 

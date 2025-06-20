@@ -103,6 +103,7 @@ void        thinking(t_philo *philo, bool pre_symposium);
 bool        clean_up(t_symposium *symposium);
 void        ft_usleep(long long duration, t_symposium *symposium);
 void        assembly_complete(t_symposium *symposium);
+void        *error_message(char *message);
 
 
 #endif
