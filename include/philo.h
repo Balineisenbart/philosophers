@@ -62,6 +62,7 @@ typedef struct s_symposium{
     pthread_mutex_t finish_lock;
     pthread_mutex_t assembly_lock;
     pthread_mutex_t start_symposium_lock;
+    pthread_mutex_t shutdown_lock;
     //safety
     bool print_lock_init;
     bool philo_all;
@@ -73,18 +74,23 @@ typedef struct s_symposium{
     bool start_symposium_mtx_init;
     bool death_thread_flag;
     bool finish_thread_flag;
+    bool shutdown_flag;
+    bool shutdown_init;
+    bool shutdown_thread_init;
     //monitoring
     pthread_t death_thread;
     pthread_t finish_thread;
+    pthread_t shutdown_thread;
 
 } t_symposium;
 
 //utils
 int error_exit(const char *error_message, t_symposium *symposium);
-long long get_timestamp(void);
+long long get_timestamp(t_symposium *symposium);
 void print_status(const char *message, t_philo *philo);
 void *monitor_death(void *arg);
 void *monitor_full(void *arg);
+void *monitor_shutdown(void *arg);
 
 //mains
 int         parse_input(t_symposium *symposium, int argc, char **argv);

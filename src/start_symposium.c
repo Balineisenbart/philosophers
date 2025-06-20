@@ -90,6 +90,9 @@ int start_symposium(t_symposium *symposium)
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
 
+    if (pthread_create(&symposium->shutdown_thread, NULL, monitor_shutdown, symposium))
+        return (error_exit("failed to crate shutdown_thread\n", symposium));
+    symposium->shutdown_thread_init = true;
 
     while (p < e)
     {
@@ -98,7 +101,6 @@ int start_symposium(t_symposium *symposium)
         p->thread_init = true;
         p++;
     }
-
 
     if (pthread_create(&symposium->death_thread, NULL, monitor_death, symposium))
         return (error_exit("failed to create death_thread\n", symposium));
@@ -111,7 +113,7 @@ int start_symposium(t_symposium *symposium)
         symposium->finish_thread_flag = true;
     }
 
-    symposium->start_symposium = get_timestamp();
+    symposium->start_symposium = get_timestamp(symposium);
 
     pthread_mutex_lock(&symposium->assembly_lock);
     symposium->complete_assembly = true;

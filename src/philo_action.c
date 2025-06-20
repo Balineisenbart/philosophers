@@ -41,7 +41,7 @@ void eating(t_philo *philo)
     print_status("is eating", philo);
 
     pthread_mutex_lock(&philo->meal_lock);
-    philo->last_meal_time = get_timestamp() - philo->symposium->start_symposium;
+    philo->last_meal_time = get_timestamp(philo->symposium) - philo->symposium->start_symposium;
     pthread_mutex_unlock(&philo->meal_lock);
 
     ft_usleep(philo->symposium->time_to_eat, philo->symposium);

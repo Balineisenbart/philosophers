@@ -12,6 +12,14 @@ bool clean_up(t_symposium *symposium)
 
     error_status = false;
 
+    if (symposium->shutdown_thread_init)
+    {
+        if (pthread_join(symposium->shutdown_thread, NULL))
+        {
+            printf("pthread join failed for shut down thread\n");
+            error_status = true;
+        }
+    }
     if (symposium->death_thread_flag)
         {
         if (pthread_join(symposium->death_thread, NULL))
