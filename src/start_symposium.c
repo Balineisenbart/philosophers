@@ -84,8 +84,7 @@ void *philo_routine(void *arg)
 }
 
 
-
-int start_symposium(t_symposium *symposium)
+static void create_thread(t_symposium *symposium)
 {
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
@@ -112,9 +111,12 @@ int start_symposium(t_symposium *symposium)
             return (error_exit("failed to create finish/isfull_thread\n", symposium));
         symposium->finish_thread_flag = true;
     }
+}
 
+int start_symposium(t_symposium *symposium)
+{
+    create_thread(symposium);
     symposium->start_symposium = get_timestamp(symposium);
-
     pthread_mutex_lock(&symposium->assembly_lock);
     symposium->complete_assembly = true;
     pthread_mutex_unlock(&symposium->assembly_lock);

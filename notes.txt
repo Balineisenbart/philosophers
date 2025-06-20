@@ -13,15 +13,8 @@ pretty sure everything works fine.
 
 -->clean_up: modularize into functions. clean up join; cleanup thread; cleanup mutex
 
--->start symposium
---->functionto create threads
 -->philo routine
 --->do check finish function. 2 lines instead of 5?
-
--->init symposium
---->mtx init function
--->init philos
---->while loop init function
 
 ----------------------------------------------------------------------------------------------
 
