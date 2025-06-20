@@ -11,31 +11,38 @@ bool clean_up(t_symposium *symposium)
     bool error_status;
 
     error_status = false;
-    printf("\nentered cleanup\n\n");
 
-    if (pthread_join(symposium->death_thread, NULL))
-    {
-        printf("\nentered join death\n");
-        printf("pthread_join death_thread fialed. Dig for error code for more info\n");
-        error_status = true;
+    if (symposium->death_thread_flag)
+        {
+        if (pthread_join(symposium->death_thread, NULL))
+        {
+            printf("pthread_join death_thread fialed. Dig for error code for more info\n");
+            error_status = true;
+        }
     }
     if (symposium->n_meals != -1)
     {
-        if (pthread_join(symposium->finish_thread, NULL))
+        if (symposium->finish_thread_flag)
         {
-            printf("\nentered join finish\n");
-            printf("pthread_join finish_thread fialed. Dig for error code for more info\n");
-            error_status = true;
+            if (pthread_join(symposium->finish_thread, NULL))
+            {
+                printf("pthread_join finish_thread fialed. Dig for error code for more info\n");
+                error_status = true;
+            }
         }
     }
     while (p < e_p)
     {
-        if (pthread_join(p->thread_id, NULL))
+        if (p->thread_init)
         {
-            printf("\nentered join thread id\n");
-            printf("pthread_join thread_id fialed. Dig for error code for more info\n");
-            error_status = true;
+            if (pthread_join(p->thread_id, NULL))
+            {
+                printf("pthread_join thread_id fialed. Dig for error code for more info\n");
+                error_status = true;
+            }
         }
+        else
+            break;
         p++;
     }
     p = symposium->philo;
@@ -106,5 +113,5 @@ bool clean_up(t_symposium *symposium)
         }
     }
 
-    return (error_status); //still needs to be modularized to adhere to line count
+    return (error_status);
 }

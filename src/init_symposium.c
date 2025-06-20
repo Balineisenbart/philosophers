@@ -11,7 +11,7 @@ static int init_forks(t_symposium *symposium)
     symposium->fork = malloc (symposium->n_philo * (sizeof(t_fork)));
     if (!symposium->fork)
         return(error_exit("Malloc for fork failed\n", symposium));
-    memset(symposium->fork, 0, symposium->n_philo);
+    memset(symposium->fork, 0, symposium->n_philo * sizeof(t_fork));
     symposium->fork_all = true;
 
     while ( i < symposium->n_philo)
@@ -34,7 +34,7 @@ static int init_philos(t_symposium *symposium)
     symposium->philo = malloc (symposium->n_philo * (sizeof(t_philo)));
     if (!symposium->philo)
         return(error_exit("Malloc failed for philosophers\n", symposium));
-    memset(symposium->philo, 0, symposium->n_philo);
+    memset(symposium->philo, 0, symposium->n_philo * sizeof(t_philo));
     symposium->philo_all = true;
 
     while (symposium->n_philo > i)
@@ -52,6 +52,7 @@ static int init_philos(t_symposium *symposium)
         if (pthread_mutex_init(&symposium->philo[i].meal_lock, NULL))
                 return(error_exit("Mutex init failed for meal lock\n", symposium));
         symposium->philo[i].meal_mtx_init = true,
+        symposium->philo[i].thread_init = false;
         i++;
     }
     return (0);
@@ -62,6 +63,8 @@ int init_symposium(t_symposium *symposium)
     symposium->start_symposium = 0;
     symposium->finish_symposium = false;
     symposium->complete_assembly = false;
+    symposium->death_thread_flag = false;
+    symposium->finish_thread_flag = false;
     
     if (pthread_mutex_init(&symposium->print_lock, NULL))
         return(error_exit("Mutex init failed for print lock\n", symposium));

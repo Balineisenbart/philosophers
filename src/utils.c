@@ -29,6 +29,12 @@ int error_exit(const char *error_message, t_symposium *symposium)
     printf("%s\n", error_message);
     printf("Valid Input Arguments: \n");
     printf("number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat] \n");
+    pthread_mutex_lock(&symposium->finish_lock);
+    symposium->finish_symposium = true;
+    pthread_mutex_unlock(&symposium->finish_lock);
+    pthread_mutex_lock(&symposium->assembly_lock);
+    symposium->complete_assembly = true;
+    pthread_mutex_unlock(&symposium->assembly_lock);
     if (symposium->flag)
         clean_up(symposium);
     return (-1);    

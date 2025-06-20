@@ -40,6 +40,7 @@ typedef struct s_philo{
 
     bool left_fork_locked;
     bool right_fork_locked;
+    bool thread_init;
 
 } t_philo;
 
@@ -70,6 +71,8 @@ typedef struct s_symposium{
     bool complete_assembly;
     bool assembly_lock_init;
     bool start_symposium_mtx_init;
+    bool death_thread_flag;
+    bool finish_thread_flag;
     //monitoring
     pthread_t death_thread;
     pthread_t finish_thread;
