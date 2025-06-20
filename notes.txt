@@ -1,7 +1,30 @@
 
 
 
-protect ft_usleep ; return when -1 !!!!!!
+pretty sure everything works fine.
+
+.>test last time for leaks & races
+.>do norm (especially line countss)
+-->monitor full
+-->monitor death
+--->split to separate monitor file.c
+
+-->clean_up: modularize into functions. clean up join; cleanup thread; cleanup mutex
+
+-->start symposium
+--->functionto create threads
+-->philo routine
+--->do check finish function. 2 lines instead of 5?
+
+-->init symposium
+--->mtx init function
+-->init philos
+--->while loop init function
+
+-->inside parse: valid_input()
+--->return error message. 1 line instead of 4. return(error_message(arg))-->return NULL & prints
+
+
 
 ----------------------------------------------------------------------------------------------
 
