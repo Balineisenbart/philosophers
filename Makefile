@@ -4,7 +4,6 @@ RESET = \033[0m
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread -Iinclude
-#-g3 -fsanitize=thread
 
 SRCS = src/main.c src/parse_input.c src/init_symposium.c src/start_symposium.c \
 	   src/philo_action.c src/clean_up.c src/utils.c src/clean_up_utils.c src/start_symposium_utils.c \

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   monitors.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: astoiber <astoiber@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/25 17:14:30 by astoiber          #+#    #+#             */
+/*   Updated: 2025/06/25 17:14:31 by astoiber         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "philo.h"
 
@@ -51,6 +63,31 @@ void *monitor_death(void *arg)
     return (NULL);
 }
 
+static int check_all_full(t_philo *cur, t_philo *e, t_symposium *symposium, bool all_full)
+{
+    while (cur < e)
+    {
+        pthread_mutex_lock(&cur->full_lock);
+        if (!cur->full)
+            all_full = false;
+        pthread_mutex_unlock(&cur->full_lock);
+        if (!all_full)  
+            return (0);
+        cur++;
+    }
+    if (all_full) 
+    {
+        pthread_mutex_lock(&symposium->finish_lock);
+        symposium->finish_symposium = true;
+        pthread_mutex_unlock(&symposium->finish_lock);
+        pthread_mutex_lock(&symposium->shutdown_lock);
+        symposium->shutdown_flag = true;
+        pthread_mutex_unlock(&symposium->shutdown_lock);
+        return (1);
+    }
+    return (0);
+}
+
 void *monitor_full(void *arg)
 {
 
@@ -65,38 +102,15 @@ void *monitor_full(void *arg)
 
     while (1)
     {
-        pthread_mutex_lock(&symposium->finish_lock);
-        if (symposium->finish_symposium)
-        {
-            pthread_mutex_unlock(&symposium->finish_lock);
+        if (check_finish(symposium))
             break;
-        }
-        pthread_mutex_unlock(&symposium->finish_lock);
         all_full = true;
         cur = p;
-        while (cur < e)
-        {
-            pthread_mutex_lock(&cur->full_lock);
-            if (!cur->full)
-                all_full = false;
-            pthread_mutex_unlock(&cur->full_lock);
-            if (!all_full)  
-                break;
-            cur++;
-        }
-        if (all_full) 
-        {
-            pthread_mutex_lock(&symposium->finish_lock);
-            symposium->finish_symposium = true;
-            pthread_mutex_unlock(&symposium->finish_lock);
-            pthread_mutex_lock(&symposium->shutdown_lock);
-            symposium->shutdown_flag = true;
-            pthread_mutex_unlock(&symposium->shutdown_lock);
-            break;
-        }
+        if (check_all_full(cur, e, symposium, all_full))
+            return (NULL);
         ft_usleep(100, symposium);
     }
-    return (NULL);      
+    return (NULL);
 }
 
 void *monitor_shutdown(void *arg)
