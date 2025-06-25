@@ -23,15 +23,9 @@ static const char *valid_input(const char *str)
     if (*str == '+')
         str++;
     else if (*str == '-')
-    {
-        printf("Only positive input is valid\n");
-        return (NULL);
-    }
+        return (error_message("Only positive input is valid"));
     if (!is_digit(*str))
-    {
-        printf("Only digits input is valid\n");
-        return (NULL);
-    }
+        return(error_message("Only digits input is valid"));
     number = str;
     while (is_digit(*str))
     {
@@ -39,10 +33,7 @@ static const char *valid_input(const char *str)
         len++;
     }
     if (len > 10)
-    {
-        printf("Overflow Warning\n");
-        return (NULL);
-    }
+        return(error_message("Overflow Warning"));
     return (number);
 }
 

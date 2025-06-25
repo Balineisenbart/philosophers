@@ -100,12 +100,15 @@ void *monitor_shutdown(void *arg)
     while (1)
     {
         pthread_mutex_lock(&symposium->shutdown_lock);
+        pthread_mutex_lock(&symposium->finish_lock);
         if (symposium->shutdown_flag)
         {
             symposium->finish_symposium = true;
+            pthread_mutex_unlock(&symposium->finish_lock);
             pthread_mutex_unlock(&symposium->shutdown_lock);
             break;
         }
+        pthread_mutex_unlock(&symposium->finish_lock);
         pthread_mutex_unlock(&symposium->shutdown_lock);
         ft_usleep(100, symposium);
     }

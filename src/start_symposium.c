@@ -52,7 +52,7 @@ void *philo_routine(void *arg)
 }
 
 
-static int create_thread(t_symposium *symposium)
+static void create_thread(t_symposium *symposium)
 {
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
