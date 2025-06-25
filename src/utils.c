@@ -6,14 +6,13 @@
 /*   By: astoiber <astoiber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 17:15:10 by astoiber          #+#    #+#             */
-/*   Updated: 2025/06/25 17:15:20 by astoiber         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:22:50 by astoiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "philo.h"
 
-void ft_usleep(long long duration, t_symposium *symposium)
+void    ft_usleep(long long duration, t_symposium *symposium)
 {
     long long start;
     long long now;
@@ -70,9 +69,7 @@ void print_status(const char *message, t_philo *philo)
     long long now;
 
     now = get_timestamp(philo->symposium);
-
     symposium_time = now - philo->symposium->start_symposium;
-
     pthread_mutex_lock(&philo->symposium->finish_lock);
     if (!philo->symposium->finish_symposium)
         printf("%lld %d %s\n", symposium_time, philo->id, message);

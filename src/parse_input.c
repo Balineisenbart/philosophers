@@ -6,10 +6,9 @@
 /*   By: astoiber <astoiber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 17:14:37 by astoiber          #+#    #+#             */
-/*   Updated: 2025/06/25 17:14:38 by astoiber         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:21:16 by astoiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "philo.h"
 
@@ -22,7 +21,6 @@ static bool is_digit(char c)
 {
     return ((c >= '0' && c <= '9'));
 }
-
 
 static const char *valid_input(const char *str)
 {

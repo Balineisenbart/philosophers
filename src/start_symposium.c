@@ -6,10 +6,9 @@
 /*   By: astoiber <astoiber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 17:14:52 by astoiber          #+#    #+#             */
-/*   Updated: 2025/06/25 17:14:53 by astoiber         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:21:44 by astoiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "philo.h"
 
@@ -100,6 +99,5 @@ int start_symposium(t_symposium *symposium)
     pthread_mutex_lock(&symposium->assembly_lock);
     symposium->complete_assembly = true;
     pthread_mutex_unlock(&symposium->assembly_lock);
-
     return (0);
 }

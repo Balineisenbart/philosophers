@@ -6,26 +6,23 @@
 /*   By: astoiber <astoiber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 17:14:18 by astoiber          #+#    #+#             */
-/*   Updated: 2025/06/25 17:14:20 by astoiber         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:20:04 by astoiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
 
 static int init_forks(t_symposium *symposium)
 {
     long long i;
 
     i = 0;
-
     symposium->fork = malloc (symposium->n_philo * (sizeof(t_fork)));
     if (!symposium->fork)
         return(error_exit("Malloc for fork failed\n", symposium));
     memset(symposium->fork, 0, symposium->n_philo * sizeof(t_fork));
     symposium->fork_all = true;
-
-    while ( i < symposium->n_philo)
+    while (i < symposium->n_philo)
     {
         symposium->fork[i].fork_id = i + 1;
         if (pthread_mutex_init(&symposium->fork[i].fork, NULL))
@@ -107,7 +104,6 @@ int init_symposium(t_symposium *symposium)
     symposium->finish_thread_flag = false;
     symposium->shutdown_flag = false;
     symposium->shutdown_thread_init = false;
-
     if (init_mtx(symposium))
         return (-1);
     if (init_forks(symposium))

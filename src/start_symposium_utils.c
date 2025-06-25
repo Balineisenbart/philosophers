@@ -6,14 +6,11 @@
 /*   By: astoiber <astoiber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 17:14:46 by astoiber          #+#    #+#             */
-/*   Updated: 2025/06/25 17:14:47 by astoiber         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:21:07 by astoiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "philo.h"
-
 
 void desync(t_philo *philo)
 {

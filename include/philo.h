@@ -107,8 +107,6 @@ void        desync(t_philo *philo);
 void        assembly_complete(t_symposium *symposium);
 bool        check_finish(t_symposium *symposium);
 
-
-
 //mains
 int         parse_input(t_symposium *symposium, int argc, char **argv);
 int         init_symposium(t_symposium *symposium);

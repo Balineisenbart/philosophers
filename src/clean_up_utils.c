@@ -6,11 +6,9 @@
 /*   By: astoiber <astoiber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 17:14:06 by astoiber          #+#    #+#             */
-/*   Updated: 2025/06/25 17:14:07 by astoiber         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:19:31 by astoiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #include "philo.h"
 
@@ -31,7 +29,8 @@ bool clean_up_monitor(t_symposium *symposium, bool error_status)
             printf("pthread_join death_thread fialed. Dig for error code for more info\n");
             error_status = true;
         }
-    }return (error_status);
+    }
+    return (error_status);
 }
 
 bool clean_up_join(t_symposium *symposium, bool error_status)

@@ -6,13 +6,11 @@
 /*   By: astoiber <astoiber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 17:14:30 by astoiber          #+#    #+#             */
-/*   Updated: 2025/06/25 17:14:31 by astoiber         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:21:22 by astoiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "philo.h"
-
 
 static int check_death(t_philo *cur, t_symposium *symposium)
 {
@@ -45,7 +43,6 @@ void *monitor_death(void *arg)
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
     t_philo *cur;
-
 
     assembly_complete(symposium);
     while(1)
@@ -92,14 +89,12 @@ void *monitor_full(void *arg)
 {
 
     t_symposium *symposium = (t_symposium *)arg;
-
     bool all_full;
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
     t_philo *cur;
 
     assembly_complete(symposium);
-
     while (1)
     {
         if (check_finish(symposium))

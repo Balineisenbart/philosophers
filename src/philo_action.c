@@ -6,10 +6,9 @@
 /*   By: astoiber <astoiber@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 17:14:41 by astoiber          #+#    #+#             */
-/*   Updated: 2025/06/25 17:14:42 by astoiber         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:21:11 by astoiber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "philo.h"
 
@@ -55,15 +54,11 @@ void eating(t_philo *philo)
     pthread_mutex_lock(&philo->meal_lock);
     philo->last_meal_time = get_timestamp(philo->symposium) - philo->symposium->start_symposium;
     pthread_mutex_unlock(&philo->meal_lock);
-
     ft_usleep(philo->symposium->time_to_eat, philo->symposium);
-
     pthread_mutex_unlock(&philo->left_fork->fork);
     philo->left_fork_locked = false;
     pthread_mutex_unlock(&philo->right_fork->fork);
     philo->right_fork_locked = false;
-
-
     philo->meals_counter++;
     if (philo->meals_counter == philo->symposium->n_meals)
     {
@@ -88,7 +83,6 @@ void thinking(t_philo *philo, bool pre_symposium)
 
     if (pre_symposium)
         print_status("is thinking", philo);
-
     if (philo->symposium->n_philo % 2 == 1)
     {
         t_eat = philo->symposium->time_to_eat;
@@ -99,6 +93,5 @@ void thinking(t_philo *philo, bool pre_symposium)
             t_think = 0;
         ft_usleep(t_think / 2, philo->symposium);
     }
-    
 }
 
