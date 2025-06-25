@@ -93,6 +93,7 @@ void *monitor_full(void *arg);
 void *monitor_shutdown(void *arg);
 bool safe_mtx_destroy_philo(pthread_mutex_t mtx, bool error_status, char *message);
 bool safe_join(pthread_t thread, bool error_status, char *message);
+void *error_message(char *message);
 
 //utils cleanup
 bool clean_up_monitor(t_symposium *symposium, bool error_status);
@@ -104,6 +105,7 @@ bool clean_up_destroy(t_symposium *symposium, bool error_status);
 //utils start symposium
 void        desync(t_philo *philo);
 void        assembly_complete(t_symposium *symposium);
+bool        check_finish(t_symposium *symposium);
 
 
 

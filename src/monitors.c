@@ -1,47 +1,50 @@
 
 #include "philo.h"
 
+
+static int check_death(t_philo *cur, t_symposium *symposium)
+{
+    long long last_meal;
+    long long now;
+
+    pthread_mutex_lock(&cur->meal_lock);
+    last_meal = cur->last_meal_time;
+    now = get_timestamp(symposium);
+    if ((last_meal == 0 && ((now - cur->symposium->start_symposium) > cur->symposium->time_to_die)) \
+    || (last_meal != 0 && (((now - cur->symposium->start_symposium) - last_meal) > cur->symposium->time_to_die)))
+    {
+        print_status("died", cur);
+        pthread_mutex_lock(&cur->symposium->finish_lock);
+        cur->symposium->finish_symposium = true;
+        pthread_mutex_unlock(&cur->symposium->finish_lock);
+        pthread_mutex_unlock(&cur->meal_lock);
+        pthread_mutex_lock(&symposium->shutdown_lock);
+        symposium->shutdown_flag = true;
+        pthread_mutex_unlock(&symposium->shutdown_lock);
+        return (1);
+    }
+    pthread_mutex_unlock(&cur->meal_lock);
+    return (0);
+}
+
 void *monitor_death(void *arg)
 {
     t_symposium *symposium = (t_symposium *)arg;
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
     t_philo *cur;
-    long long last_meal;
-    long long now;
+
 
     assembly_complete(symposium);
-
     while(1)
     {
-        pthread_mutex_lock(&symposium->finish_lock);
-        if (symposium->finish_symposium)
-        {
-            pthread_mutex_unlock(&symposium->finish_lock);
+        if (check_finish(symposium))
             break;
-        }
-        pthread_mutex_unlock(&symposium->finish_lock);
-        
         cur = p;
         while (cur < e)
         {
-            pthread_mutex_lock(&cur->meal_lock);
-
-            last_meal = cur->last_meal_time;
-            now = get_timestamp(symposium);
-
-            if ((last_meal == 0 && ((now - cur->symposium->start_symposium) > cur->symposium->time_to_die)) \
-            || (last_meal != 0 && (((now - cur->symposium->start_symposium) - last_meal) > cur->symposium->time_to_die)))
-            {
-                print_status("died", cur);
-                pthread_mutex_lock(&cur->symposium->finish_lock);
-                cur->symposium->finish_symposium = true;
-                pthread_mutex_unlock(&cur->symposium->finish_lock);
-                pthread_mutex_unlock(&cur->meal_lock);
+            if (check_death(cur++, symposium))
                 return (NULL);
-            }
-            pthread_mutex_unlock(&cur->meal_lock);
-            cur++;
         }
         ft_usleep(100, symposium);
     }
@@ -86,6 +89,9 @@ void *monitor_full(void *arg)
             pthread_mutex_lock(&symposium->finish_lock);
             symposium->finish_symposium = true;
             pthread_mutex_unlock(&symposium->finish_lock);
+            pthread_mutex_lock(&symposium->shutdown_lock);
+            symposium->shutdown_flag = true;
+            pthread_mutex_unlock(&symposium->shutdown_lock);
             break;
         }
         ft_usleep(100, symposium);

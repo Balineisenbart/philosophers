@@ -8,13 +8,9 @@ pretty sure everything works fine.
 
 -->monitor full
 --->???
--->monitor death
---->???
 
--->start symposium
---->functionto create threads
--->philo routine
---->do check finish function. 2 lines instead of 5?
+
+
 
 ----------------------------------------------------------------------------------------------
 

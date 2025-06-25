@@ -25,29 +25,30 @@ static int init_forks(t_symposium *symposium)
     return (0);
 }
 
-static void loop_philo_init(t_symposium *symposium)
+static int loop_philo_init(t_symposium *symposium)
 {
     long long i;
 
     i = 0;
     while (symposium->n_philo > i)
-        {   
-            symposium->philo[i].id = i + 1;
-            symposium->philo[i].meals_counter = 0;
-            symposium->philo[i].full = false;
-            if (pthread_mutex_init(&symposium->philo[i].full_lock, NULL))
-                return(error_exit("Mutex init failed on full lock\n", symposium));
-            symposium->philo[i].full_mtx_init = true;
-            symposium->philo[i].last_meal_time = 0;
-            symposium->philo[i].left_fork = &symposium->fork[i];
-            symposium->philo[i].right_fork = &symposium->fork[(i + 1) % symposium->n_philo];
-            symposium->philo[i].symposium = symposium;
-            if (pthread_mutex_init(&symposium->philo[i].meal_lock, NULL))
-                    return(error_exit("Mutex init failed for meal lock\n", symposium));
-            symposium->philo[i].meal_mtx_init = true,
-            symposium->philo[i].thread_init = false;
-            i++;
-        }
+    {   
+        symposium->philo[i].id = i + 1;
+        symposium->philo[i].meals_counter = 0;
+        symposium->philo[i].full = false;
+        if (pthread_mutex_init(&symposium->philo[i].full_lock, NULL))
+            return(error_exit("Mutex init failed on full lock\n", symposium));
+        symposium->philo[i].full_mtx_init = true;
+        symposium->philo[i].last_meal_time = 0;
+        symposium->philo[i].left_fork = &symposium->fork[i];
+        symposium->philo[i].right_fork = &symposium->fork[(i + 1) % symposium->n_philo];
+        symposium->philo[i].symposium = symposium;
+        if (pthread_mutex_init(&symposium->philo[i].meal_lock, NULL))
+                return(error_exit("Mutex init failed for meal lock\n", symposium));
+        symposium->philo[i].meal_mtx_init = true,
+        symposium->philo[i].thread_init = false;
+        i++;
+    }
+    return (0);
 }
 
 static int init_philos(t_symposium *symposium)
@@ -57,11 +58,12 @@ static int init_philos(t_symposium *symposium)
         return(error_exit("Malloc failed for philosophers\n", symposium));
     memset(symposium->philo, 0, symposium->n_philo * sizeof(t_philo));
     symposium->philo_all = true;
-    loop_philo_init(symposium);
+    if (loop_philo_init(symposium))
+        return (-1);
     return (0);
 }
 
-static void init_mtx(t_symposium *symposium)
+static int init_mtx(t_symposium *symposium)
 {
     if (pthread_mutex_init(&symposium->print_lock, NULL))
         return(error_exit("Mutex init failed for print lock\n", symposium));
@@ -82,6 +84,7 @@ static void init_mtx(t_symposium *symposium)
     if (pthread_mutex_init(&symposium->shutdown_lock, NULL))
         return(error_exit("Mutex init failed on shutdown lock\n", symposium));
     symposium->shutdown_init = true;
+    return (0);
 }
 
 int init_symposium(t_symposium *symposium)
@@ -94,7 +97,8 @@ int init_symposium(t_symposium *symposium)
     symposium->shutdown_flag = false;
     symposium->shutdown_thread_init = false;
 
-    init_mtx(symposium);
+    if (init_mtx(symposium))
+        return (-1);
     if (init_forks(symposium))
         return (1);
     if (init_philos(symposium))

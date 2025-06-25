@@ -1,31 +1,32 @@
 
 #include "philo.h"
 
-static bool check_finish(t_philo *philo, bool finished)
+bool check_finish(t_symposium *symposium)
 {
-    pthread_mutex_lock(&philo->symposium->finish_lock);
-    finished = philo->symposium->finish_symposium;
-    pthread_mutex_unlock(&philo->symposium->finish_lock);
+    bool finished;
+
+    finished = false;
+    pthread_mutex_lock(&symposium->finish_lock);
+    finished = symposium->finish_symposium;
+    pthread_mutex_unlock(&symposium->finish_lock);
     return (finished);
 }
 
 static void do_routine(t_philo *philo)
 {
-    bool finished;
 
-    finished = false;
     while (1)
     {
-        if (check_finish(philo, finished))
+        if (check_finish(philo->symposium))
             break;
         take_up_fork(philo);
-        if (check_finish(philo, finished))
+        if (check_finish(philo->symposium))
             break;
         eating(philo);
-        if (check_finish(philo, finished))
+        if (check_finish(philo->symposium))
             break;
         sleeping(philo);
-        if (check_finish(philo, finished))
+        if (check_finish(philo->symposium))
             break;
         thinking(philo, true);
     }
@@ -52,7 +53,7 @@ void *philo_routine(void *arg)
 }
 
 
-static void create_thread(t_symposium *symposium)
+static int create_thread(t_symposium *symposium)
 {
     t_philo *p = symposium->philo;
     t_philo *e = p + symposium->n_philo;
