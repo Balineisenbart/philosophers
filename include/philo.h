@@ -91,6 +91,21 @@ void print_status(const char *message, t_philo *philo);
 void *monitor_death(void *arg);
 void *monitor_full(void *arg);
 void *monitor_shutdown(void *arg);
+bool safe_mtx_destroy_philo(pthread_mutex_t mtx, bool error_status, char *message);
+bool safe_join(pthread_t thread, bool error_status, char *message);
+
+//utils cleanup
+bool clean_up_monitor(t_symposium *symposium, bool error_status);
+bool clean_up_join(t_symposium *symposium, bool error_status);
+bool clean_up_philos(t_symposium *symposium, bool error_status);
+bool clean_up_fork(t_symposium *symposium, bool error_status);
+bool clean_up_destroy(t_symposium *symposium, bool error_status);
+
+//utils start symposium
+void        desync(t_philo *philo);
+void        assembly_complete(t_symposium *symposium);
+
+
 
 //mains
 int         parse_input(t_symposium *symposium, int argc, char **argv);
@@ -102,7 +117,6 @@ void        sleeping(t_philo *philo);
 void        thinking(t_philo *philo, bool pre_symposium);
 bool        clean_up(t_symposium *symposium);
 void        ft_usleep(long long duration, t_symposium *symposium);
-void        assembly_complete(t_symposium *symposium);
 
 
 #endif

@@ -9,8 +9,6 @@ pretty sure everything works fine.
 -->monitor death
 --->split to separate monitor file.c
 
--->clean_up: modularize into functions. clean up join; cleanup thread; cleanup mutex
-
 -->start symposium
 --->functionto create threads
 -->philo routine

@@ -1,7 +1,6 @@
 
 #include "philo.h"
 
-
 void ft_usleep(long long duration, t_symposium *symposium)
 {
     long long start;
@@ -69,6 +68,7 @@ void print_status(const char *message, t_philo *philo)
 }
 
 
+
 void *monitor_death(void *arg)
 {
     t_symposium *symposium = (t_symposium *)arg;
@@ -106,6 +106,9 @@ void *monitor_death(void *arg)
                 cur->symposium->finish_symposium = true;
                 pthread_mutex_unlock(&cur->symposium->finish_lock);
                 pthread_mutex_unlock(&cur->meal_lock);
+                pthread_mutex_lock(&symposium->shutdown_lock);
+                symposium->shutdown_flag = true;
+                pthread_mutex_unlock(&symposium->shutdown_lock);
                 return (NULL);
             }
             pthread_mutex_unlock(&cur->meal_lock);
@@ -154,6 +157,9 @@ void *monitor_full(void *arg)
             pthread_mutex_lock(&symposium->finish_lock);
             symposium->finish_symposium = true;
             pthread_mutex_unlock(&symposium->finish_lock);
+            pthread_mutex_lock(&symposium->shutdown_lock);
+            symposium->shutdown_flag = true;
+            pthread_mutex_unlock(&symposium->shutdown_lock);
             break;
         }
         ft_usleep(100, symposium);
@@ -168,12 +174,15 @@ void *monitor_shutdown(void *arg)
     while (1)
     {
         pthread_mutex_lock(&symposium->shutdown_lock);
+        pthread_mutex_lock(&symposium->finish_lock);
         if (symposium->shutdown_flag)
         {
             symposium->finish_symposium = true;
+            pthread_mutex_unlock(&symposium->finish_lock);
             pthread_mutex_unlock(&symposium->shutdown_lock);
             break;
         }
+        pthread_mutex_unlock(&symposium->finish_lock);
         pthread_mutex_unlock(&symposium->shutdown_lock);
         ft_usleep(100, symposium);
     }
